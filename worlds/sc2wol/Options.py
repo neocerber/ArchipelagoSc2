@@ -112,6 +112,12 @@ class ExcludedMissions(OptionSet):
     display_name = "Excluded Missions"
 
 
+class HideItemAvailableness(DefaultOnToggle):
+    """ Only affect the web tracker. If set to Off, the items will be displayed 
+    differently depending on if it is available or not in the current seed. """
+    display_name = "Hide item availableness"
+
+
 # noinspection PyTypeChecker
 sc2wol_options: Dict[str, Option] = {
     "game_difficulty": GameDifficulty,
@@ -126,7 +132,8 @@ sc2wol_options: Dict[str, Option] = {
     "units_always_have_upgrades": UnitsAlwaysHaveUpgrades,
     "locked_items": LockedItems,
     "excluded_items": ExcludedItems,
-    "excluded_missions": ExcludedMissions
+    "excluded_missions": ExcludedMissions,
+    "hide_item_availableness": HideItemAvailableness
 }
 
 

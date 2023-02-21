@@ -44,20 +44,20 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><img src="{{ icons['Bunker'] }}" class="{{ 'acquired' if 'Bunker' in acquired_items }}" title="Bunker" /></td>
-                <td colspan="2"><img src="{{ icons['Missile Turret'] }}" class="{{ 'acquired' if 'Missile Turret' in acquired_items }}" title="Missile Turret" /></td>
-                <td colspan="2"><img src="{{ icons['Sensor Tower'] }}" class="{{ 'acquired' if 'Sensor Tower' in acquired_items }}" title="Sensor Tower" /></td>
+                <td colspan="2"><img src="{{ icons['Bunker'] }}" class="{{ 'acquired' if 'Bunker' in acquired_items else('' if not show_availableness else('available' if 'Bunker' in available_items)) }}" title="Bunker" /></td>
+                <td colspan="2"><img src="{{ icons['Missile Turret'] }}" class="{{ 'acquired' if 'Missile Turret' in acquired_items else('' if not show_availableness else('available' if 'Missile Turret' in available_items)) }}" title="Missile Turret" /></td>
+                <td colspan="2"><img src="{{ icons['Sensor Tower'] }}" class="{{ 'acquired' if 'Sensor Tower' in acquired_items else('' if not show_availableness else('available' if 'Sensor Tower' in available_items)) }}" title="Sensor Tower" /></td>
             </tr>
             <tr>
-                <td><img src="{{ icons['Projectile Accelerator (Bunker)'] }}" class="{{ 'acquired' if 'Projectile Accelerator (Bunker)' in acquired_items }}" title="Projectile Accelerator (Bunker)" /></td>
-                <td><img src="{{ icons['Neosteel Bunker (Bunker)'] }}" class="{{ 'acquired' if 'Neosteel Bunker (Bunker)' in acquired_items }}" title="Neosteel Bunker (Bunker)" /></td>
-                <td><img src="{{ icons['Titanium Housing (Missile Turret)'] }}" class="{{ 'acquired' if 'Titanium Housing (Missile Turret)' in acquired_items }}" title="Titanium Housing (Missile Turret)" /></td>
-                <td><img src="{{ icons['Hellstorm Batteries (Missile Turret)'] }}" class="{{ 'acquired' if 'Hellstorm Batteries (Missile Turret)' in acquired_items }}" title="Hellstorm Batteries (Missile Turret)" /></td>
+                <td><img src="{{ icons['Projectile Accelerator (Bunker)'] }}" class="{{ 'acquired' if 'Projectile Accelerator (Bunker)' in acquired_items else('' if not show_availableness else('available' if 'Projectile Accelerator (Bunker)' in available_items)) }}" title="Projectile Accelerator (Bunker)" /></td>
+                <td><img src="{{ icons['Neosteel Bunker (Bunker)'] }}" class="{{ 'acquired' if 'Neosteel Bunker (Bunker)' in acquired_items else('' if not show_availableness else('available' if 'Neosteel Bunker (Bunker)' in available_items)) }}" title="Neosteel Bunker (Bunker)" /></td>
+                <td><img src="{{ icons['Titanium Housing (Missile Turret)'] }}" class="{{ 'acquired' if 'Titanium Housing (Missile Turret)' in acquired_items else('' if not show_availableness else('available' if 'Titanium Housing (Missile Turret)' in available_items)) }}" title="Titanium Housing (Missile Turret)" /></td>
+                <td><img src="{{ icons['Hellstorm Batteries (Missile Turret)'] }}" class="{{ 'acquired' if 'Hellstorm Batteries (Missile Turret)' in acquired_items else('' if not show_availableness else('available' if 'Hellstorm Batteries (Missile Turret)' in available_items)) }}" title="Hellstorm Batteries (Missile Turret)" /></td>
                 <td colspan="2">&nbsp;</td>
-                <td><img src="{{ icons['Advanced Construction (SCV)'] }}" class="{{ 'acquired' if 'Advanced Construction (SCV)' in acquired_items }}" title="Advanced Construction (SCV)" /></td>
-                <td><img src="{{ icons['Dual-Fusion Welders (SCV)'] }}" class="{{ 'acquired' if 'Dual-Fusion Welders (SCV)' in acquired_items }}" title="Dual-Fusion Welders (SCV)" /></td>
-                <td><img src="{{ icons['Fire-Suppression System (Building)'] }}" class="{{ 'acquired' if 'Fire-Suppression System (Building)' in acquired_items }}" title="Fire-Suppression System (Building)" /></td>
-                <td><img src="{{ icons['Orbital Command (Building)'] }}" class="{{ 'acquired' if 'Orbital Command (Building)' in acquired_items }}" title="Orbital Command (Building)" /></td>
+                <td><img src="{{ icons['Advanced Construction (SCV)'] }}" class="{{ 'acquired' if 'Advanced Construction (SCV)' in acquired_items else('' if not show_availableness else('available' if 'Advanced Construction (SCV)' in available_items)) }}" title="Advanced Construction (SCV)" /></td>
+                <td><img src="{{ icons['Dual-Fusion Welders (SCV)'] }}" class="{{ 'acquired' if 'Dual-Fusion Welders (SCV)' in acquired_items else('' if not show_availableness else('available' if 'Dual-Fusion Welders (SCV)' in available_items)) }}" title="Dual-Fusion Welders (SCV)" /></td>
+                <td><img src="{{ icons['Fire-Suppression System (Building)'] }}" class="{{ 'acquired' if 'Fire-Suppression System (Building)' in acquired_items else('' if not show_availableness else('available' if 'Fire-Suppression System (Building)' in available_items)) }}" title="Fire-Suppression System (Building)" /></td>
+                <td><img src="{{ icons['Orbital Command (Building)'] }}" class="{{ 'acquired' if 'Orbital Command (Building)' in acquired_items else('' if not show_availableness else('available' if 'Orbital Command (Building)' in available_items)) }}" title="Orbital Command (Building)" /></td>
             </tr>
             <tr>
                 <td colspan="10" class="title">
@@ -65,23 +65,30 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><img src="{{ icons['Marine'] }}" class="{{ 'acquired' if 'Marine' in acquired_items }}" title="Marine" /></td>
-                <td colspan="2"><img src="{{ icons['Medic'] }}" class="{{ 'acquired' if 'Medic' in acquired_items }}" title="Medic" /></td>
-                <td colspan="2"><img src="{{ icons['Firebat'] }}" class="{{ 'acquired' if 'Firebat' in acquired_items }}" title="Firebat" /></td>
-                <td colspan="2"><img src="{{ icons['Marauder'] }}" class="{{ 'acquired' if 'Marauder' in acquired_items }}" title="Marauder" /></td>
-                <td colspan="2"><img src="{{ icons['Reaper'] }}" class="{{ 'acquired' if 'Reaper' in acquired_items }}" title="Reaper" /></td>
+                <!-- <td colspan="2"><img src="{{ icons['Marine'] }}" class="{{ 'acquired' if 'Marine' in acquired_items }}" title="Marine" /></td> -->
+                <!-- <td colspan="2"><img src="{{ icons['Marine'] }}" class="{{ '' if false else('available' if 'Marine' in acquired_items) }}" title="Marine" /></td>  -->
+                <!-- <td colspan="2"><img src="{{ icons['Marine'] }}" class="{{ 'acquired' if 'Marine' in acquired_items else('' if not show_availableness else('available' if 'Marine' in available_items)) }}" title="Marine" /></td>  -->
+                <td colspan="2"><div class="{{ 'acquired' if 'Marine' in acquired_items else('' if not show_availableness else('available' if 'Marine' in available_items)) }}"><img src="{{ icons['Marine'] }}" class="{{ 'acquired' if 'Marine' in acquired_items }}" title="Marine" /></div></td>
+                <!-- <td colspan="2"><img src="{{ icons['Medic'] }}" class="{{ 'acquired' if 'Medic' in acquired_items }}" title="Medic" /></td> -->
+                <!-- <td colspan="2"><img src="{{ icons['Medic'] }}" class="{{ 'acquired' if 'Medic' in acquired_items else('' if not show_availableness else('available' if 'Medic' in available_items)) }}" title="Medic" /></td> -->
+                <td colspan="2"><div class="{{ 'acquired' if 'Medic' in acquired_items else('' if not show_availableness else('available' if 'Medic' in available_items)) }}"><img src="{{ icons['Medic'] }}" class="{{ 'acquired' if 'Medic' in acquired_items }}" title="Medic" /></div></td>
+                <td colspan="2"><div class="{{ 'acquired' if 'Firebat' in acquired_items else('' if not show_availableness else('available' if 'Firebat' in available_items)) }}"><img src="{{ icons['Firebat'] }}" class="{{ 'acquired' if 'Firebat' in acquired_items }}" title="Firebat" /></div></td>
+                <!-- <td colspan="2"><img src="{{ icons['Firebat'] }}" class="{{ 'acquired' if 'Firebat' in acquired_items }}" title="Firebat" /></td> -->
+                <!-- <td colspan="2"><img src="{{ icons['Marauder'] }}" class="{{ 'acquired' if 'Marauder' in acquired_items else('' if not show_availableness else('available' if 'Marauder' in available_items)) }}" title="Marauder" /></td> -->
+                <td colspan="2"><div class="{{ 'acquired' if 'Marauder' in acquired_items else('' if not show_availableness else('available' if 'Marauder' in available_items)) }}"><img src="{{ icons['Marauder'] }}" class="{{ 'acquired' if 'Marauder' in acquired_items else('' if not show_availableness else('available' if 'Marauder' in available_items)) }}" title="Marauder" /></div></td>
+                <td colspan="2"><img src="{{ icons['Reaper'] }}" class="{{ 'acquired' if 'Reaper' in acquired_items else('' if not show_availableness else('available' if 'Reaper' in available_items)) }}" title="Reaper" /></td>
             </tr>
             <tr>
-                <td><img src="{{ icons['Stimpack (Marine)'] }}" class="{{ 'acquired' if 'Stimpack (Marine)' in acquired_items }}" title="Stimpack (Marine)" /></td>
-                <td><img src="{{ icons['Combat Shield (Marine)'] }}" class="{{ 'acquired' if 'Combat Shield (Marine)' in acquired_items }}" title="Combat Shield (Marine)" /></td>
-                <td><img src="{{ icons['Advanced Medic Facilities (Medic)'] }}" class="{{ 'acquired' if 'Advanced Medic Facilities (Medic)' in acquired_items }}" title="Advanced Medic Facilities (Medic)" /></td>
-                <td><img src="{{ icons['Stabilizer Medpacks (Medic)'] }}" class="{{ 'acquired' if 'Stabilizer Medpacks (Medic)' in acquired_items }}" title="Stabilizer Medpacks (Medic)" /></td>
-                <td><img src="{{ icons['Incinerator Gauntlets (Firebat)'] }}" class="{{ 'acquired' if 'Incinerator Gauntlets (Firebat)' in acquired_items }}" title="Incinerator Gauntlets (Firebat)" /></td>
-                <td><img src="{{ icons['Juggernaut Plating (Firebat)'] }}" class="{{ 'acquired' if 'Juggernaut Plating (Firebat)' in acquired_items }}" title="Juggernaut Plating (Firebat)" /></td>
-                <td><img src="{{ icons['Concussive Shells (Marauder)'] }}" class="{{ 'acquired' if 'Concussive Shells (Marauder)' in acquired_items }}" title="Concussive Shells (Marauder)" /></td>
-                <td><img src="{{ icons['Kinetic Foam (Marauder)'] }}" class="{{ 'acquired' if 'Kinetic Foam (Marauder)' in acquired_items }}" title="Kinetic Foam (Marauder)" /></td>
-                <td><img src="{{ icons['U-238 Rounds (Reaper)'] }}" class="{{ 'acquired' if 'U-238 Rounds (Reaper)' in acquired_items }}" title="U-238 Rounds (Reaper)" /></td>
-                <td><img src="{{ icons['G-4 Clusterbomb (Reaper)'] }}" class="{{ 'acquired' if 'G-4 Clusterbomb (Reaper)' in acquired_items }}" title="G-4 Clusterbomb (Reaper)" /></td>
+                <td><img src="{{ icons['Stimpack (Marine)'] }}" class="{{ 'acquired' if 'Stimpack (Marine)' in acquired_items else('' if not show_availableness else('available' if 'Stimpack (Marine)' in available_items)) }}" title="Stimpack (Marine)" /></td>
+                <td><img src="{{ icons['Combat Shield (Marine)'] }}" class="{{ 'acquired' if 'Combat Shield (Marine)' in acquired_items else('' if not show_availableness else('available' if 'Combat Shield (Marine)' in available_items)) }}" title="Combat Shield (Marine)" /></td>
+                <td><img src="{{ icons['Advanced Medic Facilities (Medic)'] }}" class="{{ 'acquired' if 'Advanced Medic Facilities (Medic)' in acquired_items else('' if not show_availableness else('available' if 'Advanced Medic Facilities (Medic)' in available_items)) }}" title="Advanced Medic Facilities (Medic)" /></td>
+                <td><img src="{{ icons['Stabilizer Medpacks (Medic)'] }}" class="{{ 'acquired' if 'Stabilizer Medpacks (Medic)' in acquired_items else('' if not show_availableness else('available' if 'Stabilizer Medpacks (Medic)' in available_items)) }}" title="Stabilizer Medpacks (Medic)" /></td>
+                <td><img src="{{ icons['Incinerator Gauntlets (Firebat)'] }}" class="{{ 'acquired' if 'Incinerator Gauntlets (Firebat)' in acquired_items else('' if not show_availableness else('available' if 'Incinerator Gauntlets (Firebat)' in available_items)) }}" title="Incinerator Gauntlets (Firebat)" /></td>
+                <td><img src="{{ icons['Juggernaut Plating (Firebat)'] }}" class="{{ 'acquired' if 'Juggernaut Plating (Firebat)' in acquired_items else('' if not show_availableness else('available' if 'Juggernaut Plating (Firebat)' in available_items)) }}" title="Juggernaut Plating (Firebat)" /></td>
+                <td><img src="{{ icons['Concussive Shells (Marauder)'] }}" class="{{ 'acquired' if 'Concussive Shells (Marauder)' in acquired_items else('' if not show_availableness else('available' if 'Concussive Shells (Marauder)' in available_items)) }}" title="Concussive Shells (Marauder)" /></td>
+                <td><img src="{{ icons['Kinetic Foam (Marauder)'] }}" class="{{ 'acquired' if 'Kinetic Foam (Marauder)' in acquired_items else('' if not show_availableness else('available' if 'Kinetic Foam (Marauder)' in available_items)) }}" title="Kinetic Foam (Marauder)" /></td>
+                <td><img src="{{ icons['U-238 Rounds (Reaper)'] }}" class="{{ 'acquired' if 'U-238 Rounds (Reaper)' in acquired_items else('' if not show_availableness else('available' if 'U-238 Rounds (Reaper)' in available_items)) }}" title="U-238 Rounds (Reaper)" /></td>
+                <td><img src="{{ icons['G-4 Clusterbomb (Reaper)'] }}" class="{{ 'acquired' if 'G-4 Clusterbomb (Reaper)' in acquired_items else('' if not show_availableness else('available' if 'G-4 Clusterbomb (Reaper)' in available_items)) }}" title="G-4 Clusterbomb (Reaper)" /></td>
             </tr>
             <tr>
                 <td colspan="10" class="title">
@@ -89,23 +96,23 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><img src="{{ icons['Hellion'] }}" class="{{ 'acquired' if 'Hellion' in acquired_items }}" title="Hellion" /></td>
-                <td colspan="2"><img src="{{ icons['Vulture'] }}" class="{{ 'acquired' if 'Vulture' in acquired_items }}" title="Vulture" /></td>
-                <td colspan="2"><img src="{{ icons['Goliath'] }}" class="{{ 'acquired' if 'Goliath' in acquired_items }}" title="Goliath" /></td>
-                <td colspan="2"><img src="{{ icons['Diamondback'] }}" class="{{ 'acquired' if 'Diamondback' in acquired_items }}" title="Diamondback" /></td>
-                <td colspan="2"><img src="{{ icons['Siege Tank'] }}" class="{{ 'acquired' if 'Siege Tank' in acquired_items }}" title="Siege Tank" /></td>
+                <td colspan="2"><img src="{{ icons['Hellion'] }}" class="{{ 'acquired' if 'Hellion' in acquired_items else('' if not show_availableness else('available' if 'Hellion' in available_items)) }}" title="Hellion" /></td>
+                <td colspan="2"><img src="{{ icons['Vulture'] }}" class="{{ 'acquired' if 'Vulture' in acquired_items else('' if not show_availableness else('available' if 'Vulture' in available_items)) }}" title="Vulture" /></td>
+                <td colspan="2"><img src="{{ icons['Goliath'] }}" class="{{ 'acquired' if 'Goliath' in acquired_items else('' if not show_availableness else('available' if 'Goliath' in available_items)) }}" title="Goliath" /></td>
+                <td colspan="2"><img src="{{ icons['Diamondback'] }}" class="{{ 'acquired' if 'Diamondback' in acquired_items else('' if not show_availableness else('available' if 'Diamondback' in available_items)) }}" title="Diamondback" /></td>
+                <td colspan="2"><img src="{{ icons['Siege Tank'] }}" class="{{ 'acquired' if 'Siege Tank' in acquired_items else('' if not show_availableness else('available' if 'Siege Tank' in available_items)) }}" title="Siege Tank" /></td>
             </tr>
             <tr>
-                <td><img src="{{ icons['Twin-Linked Flamethrower (Hellion)'] }}" class="{{ 'acquired' if 'Twin-Linked Flamethrower (Hellion)' in acquired_items }}" title="Twin-Linked Flamethrower (Hellion)" /></td>
-                <td><img src="{{ icons['Thermite Filaments (Hellion)'] }}" class="{{ 'acquired' if 'Thermite Filaments (Hellion)' in acquired_items }}" title="Thermite Filaments (Hellion)" /></td>
-                <td><img src="{{ icons['Cerberus Mine (Vulture)'] }}" class="{{ 'acquired' if 'Cerberus Mine (Vulture)' in acquired_items }}" title="Cerberus Mine (Vulture)" /></td>
-                <td><img src="{{ icons['Replenishable Magazine (Vulture)'] }}" class="{{ 'acquired' if 'Replenishable Magazine (Vulture)' in acquired_items }}" title="Replenishable Magazine (Vulture)" /></td>
-                <td><img src="{{ icons['Multi-Lock Weapons System (Goliath)'] }}" class="{{ 'acquired' if 'Multi-Lock Weapons System (Goliath)' in acquired_items }}" title="Multi-Lock Weapons System (Goliath)" /></td>
-                <td><img src="{{ icons['Ares-Class Targeting System (Goliath)'] }}" class="{{ 'acquired' if 'Ares-Class Targeting System (Goliath)' in acquired_items }}" title="Ares-Class Targeting System (Goliath)" /></td>
-                <td><img src="{{ icons['Tri-Lithium Power Cell (Diamondback)'] }}" class="{{ 'acquired' if 'Tri-Lithium Power Cell (Diamondback)' in acquired_items }}" title="Tri-Lithium Power Cell (Diamondback)" /></td>
-                <td><img src="{{ icons['Shaped Hull (Diamondback)'] }}" class="{{ 'acquired' if 'Shaped Hull (Diamondback)' in acquired_items }}" title="Shaped Hull (Diamondback)" /></td>
-                <td><img src="{{ icons['Maelstrom Rounds (Siege Tank)'] }}" class="{{ 'acquired' if 'Maelstrom Rounds (Siege Tank)' in acquired_items }}" title="Maelstrom Rounds (Siege Tank)" /></td>
-                <td><img src="{{ icons['Shaped Blast (Siege Tank)'] }}" class="{{ 'acquired' if 'Shaped Blast (Siege Tank)' in acquired_items }}" title="Shaped Blast (Siege Tank)" /></td>
+                <td><img src="{{ icons['Twin-Linked Flamethrower (Hellion)'] }}" class="{{ 'acquired' if 'Twin-Linked Flamethrower (Hellion)' in acquired_items else('' if not show_availableness else('available' if 'Twin-Linked Flamethrower (Hellion)' in available_items)) }}" title="Twin-Linked Flamethrower (Hellion)" /></td>
+                <td><img src="{{ icons['Thermite Filaments (Hellion)'] }}" class="{{ 'acquired' if 'Thermite Filaments (Hellion)' in acquired_items else('' if not show_availableness else('available' if 'Thermite Filaments (Hellion)' in available_items)) }}" title="Thermite Filaments (Hellion)" /></td>
+                <td><img src="{{ icons['Cerberus Mine (Vulture)'] }}" class="{{ 'acquired' if 'Cerberus Mine (Vulture)' in acquired_items else('' if not show_availableness else('available' if 'Cerberus Mine (Vulture)' in available_items)) }}" title="Cerberus Mine (Vulture)" /></td>
+                <td><img src="{{ icons['Replenishable Magazine (Vulture)'] }}" class="{{ 'acquired' if 'Replenishable Magazine (Vulture)' in acquired_items else('' if not show_availableness else('available' if 'Replenishable Magazine (Vulture)' in available_items)) }}" title="Replenishable Magazine (Vulture)" /></td>
+                <td><img src="{{ icons['Multi-Lock Weapons System (Goliath)'] }}" class="{{ 'acquired' if 'Multi-Lock Weapons System (Goliath)' in acquired_items else('' if not show_availableness else('available' if 'Multi-Lock Weapons System (Goliath)' in available_items)) }}" title="Multi-Lock Weapons System (Goliath)" /></td>
+                <td><img src="{{ icons['Ares-Class Targeting System (Goliath)'] }}" class="{{ 'acquired' if 'Ares-Class Targeting System (Goliath)' in acquired_items else('' if not show_availableness else('available' if 'Ares-Class Targeting System (Goliath)' in available_items)) }}" title="Ares-Class Targeting System (Goliath)" /></td>
+                <td><img src="{{ icons['Tri-Lithium Power Cell (Diamondback)'] }}" class="{{ 'acquired' if 'Tri-Lithium Power Cell (Diamondback)' in acquired_items else('' if not show_availableness else('available' if 'Tri-Lithium Power Cell (Diamondback)' in available_items)) }}" title="Tri-Lithium Power Cell (Diamondback)" /></td>
+                <td><img src="{{ icons['Shaped Hull (Diamondback)'] }}" class="{{ 'acquired' if 'Shaped Hull (Diamondback)' in acquired_items else('' if not show_availableness else('available' if 'Shaped Hull (Diamondback)' in available_items)) }}" title="Shaped Hull (Diamondback)" /></td>
+                <td><img src="{{ icons['Maelstrom Rounds (Siege Tank)'] }}" class="{{ 'acquired' if 'Maelstrom Rounds (Siege Tank)' in acquired_items else('' if not show_availableness else('available' if 'Maelstrom Rounds (Siege Tank)' in available_items)) }}" title="Maelstrom Rounds (Siege Tank)" /></td>
+                <td><img src="{{ icons['Shaped Blast (Siege Tank)'] }}" class="{{ 'acquired' if 'Shaped Blast (Siege Tank)' in acquired_items else('' if not show_availableness else('available' if 'Shaped Blast (Siege Tank)' in available_items)) }}" title="Shaped Blast (Siege Tank)" /></td>
             </tr>
             <tr>
                 <td colspan="10" class="title">
@@ -113,13 +120,14 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><img src="{{ icons['Medivac'] }}" class="{{ 'acquired' if 'Medivac' in acquired_items }}" title="Medivac" /></td>
-                <td colspan="2"><img src="{{ icons['Wraith'] }}" class="{{ 'acquired' if 'Wraith' in acquired_items }}" title="Wraith" /></td>
-                <td colspan="2"><img src="{{ icons['Viking'] }}" class="{{ 'acquired' if 'Viking' in acquired_items }}" title="Viking" /></td>
-                <td colspan="2"><img src="{{ icons['Banshee'] }}" class="{{ 'acquired' if 'Banshee' in acquired_items }}" title="Banshee" /></td>
-                <td colspan="2"><img src="{{ icons['Battlecruiser'] }}" class="{{ 'acquired' if 'Battlecruiser' in acquired_items }}" title="Battlecruiser" /></td>
+                <td colspan="2"><img src="{{ icons['Medivac'] }}" class="{{ 'acquired' if 'Medivac' in acquired_items else('' if not show_availableness else('available' if 'Medivac' in available_items)) }}" title="Medivac" /></td>
+                <td colspan="2"><img src="{{ icons['Wraith'] }}" class="{{ 'acquired' if 'Wraith' in acquired_items else('' if not show_availableness else('available' if 'Wraith' in available_items)) }}" title="Wraith" /></td>
+                <td colspan="2"><img src="{{ icons['Viking'] }}" class="{{ 'acquired' if 'Viking' in acquired_items else('' if not show_availableness else('available' if 'Viking' in available_items)) }}" title="Viking" /></td>
+                <td colspan="2"><img src="{{ icons['Banshee'] }}" class="{{ 'acquired' if 'Banshee' in acquired_items else('' if not show_availableness else('available' if 'Banshee' in available_items)) }}" title="Banshee" /></td>
+                <td colspan="2"><img src="{{ icons['Battlecruiser'] }}" class="{{ 'acquired' if 'Battlecruiser' in acquired_items else('' if not show_availableness else('available' if 'Battlecruiser' in available_items)) }}" title="Battlecruiser" /></td>
             </tr>
             <tr>
+                <!--dsa rendu ici.... -->
                 <td><img src="{{ icons['Rapid Deployment Tube (Medivac)'] }}" class="{{ 'acquired' if 'Rapid Deployment Tube (Medivac)' in acquired_items }}" title="Rapid Deployment Tube (Medivac)" /></td>
                 <td><img src="{{ icons['Advanced Healing AI (Medivac)'] }}" class="{{ 'acquired' if 'Advanced Healing AI (Medivac)' in acquired_items }}" title="Advanced Healing AI (Medivac)" /></td>
                 <td><img src="{{ icons['Tomahawk Power Cells (Wraith)'] }}" class="{{ 'acquired' if 'Tomahawk Power Cells (Wraith)' in acquired_items }}" title="Tomahawk Power Cells (Wraith)" /></td>
@@ -137,11 +145,12 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><img src="{{ icons['Ghost'] }}" class="{{ 'acquired' if 'Ghost' in acquired_items }}" title="Ghost" /></td>
-                <td colspan="2"><img src="{{ icons['Spectre'] }}" class="{{ 'acquired' if 'Spectre' in acquired_items }}" title="Spectre" /></td>
-                <td colspan="2"><img src="{{ icons['Thor'] }}" class="{{ 'acquired' if 'Thor' in acquired_items }}" title="Thor" /></td>
+                <td colspan="2"><img src="{{ icons['Ghost'] }}" class="{{ 'acquired' if 'Ghost' in acquired_items else('' if not show_availableness else('available' if 'Ghost' in available_items)) }}" title="Ghost" /></td>
+                <td colspan="2"><img src="{{ icons['Spectre'] }}" class="{{ 'acquired' if 'Spectre' in acquired_items else('' if not show_availableness else('available' if 'Spectre' in available_items)) }}" title="Spectre" /></td>
+                <td colspan="2"><img src="{{ icons['Thor'] }}" class="{{ 'acquired' if 'Thor' in acquired_items else('' if not show_availableness else('available' if 'Thor' in available_items)) }}" title="Thor" /></td>
             </tr>
             <tr>
+                <!--dsa rendu ici.... -->
                 <td><img src="{{ icons['Ocular Implants (Ghost)'] }}" class="{{ 'acquired' if 'Ocular Implants (Ghost)' in acquired_items }}" title="Ocular Implants (Ghost)" /></td>
                 <td><img src="{{ icons['Crius Suit (Ghost)'] }}" class="{{ 'acquired' if 'Crius Suit (Ghost)' in acquired_items }}" title="Crius Suit (Ghost)" /></td>
                 <td><img src="{{ icons['Psionic Lash (Spectre)'] }}" class="{{ 'acquired' if 'Psionic Lash (Spectre)' in acquired_items }}" title="Psionic Lash (Spectre)" /></td>
@@ -155,6 +164,7 @@
                 </td>
             </tr>
             <tr>
+                <!--dsa rendu ici.... -->
                 <td><img src="{{ icons['War Pigs'] }}" class="{{ 'acquired' if 'War Pigs' in acquired_items }}" title="War Pigs" /></td>
                 <td><img src="{{ icons['Devil Dogs'] }}" class="{{ 'acquired' if 'Devil Dogs' in acquired_items }}" title="Devil Dogs" /></td>
                 <td><img src="{{ icons['Hammer Securities'] }}" class="{{ 'acquired' if 'Hammer Securities' in acquired_items }}" title="Hammer Securities" /></td>
@@ -170,6 +180,7 @@
                 </td>
             </tr>
             <tr>
+                <!--dsa rendu ici.... -->
                 <td><img src="{{ icons['Ultra-Capacitors'] }}" class="{{ 'acquired' if 'Ultra-Capacitors' in acquired_items }}" title="Ultra-Capacitors" /></td>
                 <td><img src="{{ icons['Vanadium Plating'] }}" class="{{ 'acquired' if 'Vanadium Plating' in acquired_items }}" title="Vanadium Plating" /></td>
                 <td><img src="{{ icons['Orbital Depots'] }}" class="{{ 'acquired' if 'Orbital Depots' in acquired_items }}" title="Orbital Depots" /></td>
@@ -182,6 +193,7 @@
                 <td><img src="{{ icons['Orbital Strike'] }}" class="{{ 'acquired' if 'Orbital Strike' in acquired_items }}" title="Orbital Strike" /></td>
             </tr>
             <tr>
+                <!--dsa rendu ici.... -->
                 <td><img src="{{ icons['Shrike Turret'] }}" class="{{ 'acquired' if 'Shrike Turret' in acquired_items }}" title="Shrike Turret" /></td>
                 <td><img src="{{ icons['Fortified Bunker'] }}" class="{{ 'acquired' if 'Fortified Bunker' in acquired_items }}" title="Fortified Bunker" /></td>
                 <td><img src="{{ icons['Planetary Fortress'] }}" class="{{ 'acquired' if 'Planetary Fortress' in acquired_items }}" title="Planetary Fortress" /></td>
@@ -199,6 +211,7 @@
                 </td>
             </tr>
             <tr>
+                <!--dsa rendu ici.... -->
                 <td><img src="{{ icons['Zealot'] }}" class="{{ 'acquired' if 'Zealot' in acquired_items }}" title="Zealot" /></td>
                 <td><img src="{{ icons['Stalker'] }}" class="{{ 'acquired' if 'Stalker' in acquired_items }}" title="Stalker" /></td>
                 <td><img src="{{ icons['High Templar'] }}" class="{{ 'acquired' if 'High Templar' in acquired_items }}" title="High Templar" /></td>

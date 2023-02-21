@@ -1169,6 +1169,19 @@ def __renderSC2WoLTracker(multisave: Dict[str, Any], room: Room, locations: Dict
             count = count * 15
             display_data[base_name + "_count"] = count
 
+    # Should maybe disable it for async of 1000+ players XD
+    display_data['show_availableness'] = 1 - slot_data['hide_item_availableness']
+    if display_data['show_availableness']:
+        itemPool = []
+        # Could check if list is complete and stop. Worst case, all placer are still looked into...
+        for cPlayer in locations:
+            itemPool += [locations[cPlayer][cLoc][0] for cLoc in locations[cPlayer] 
+                            if locations[cPlayer][cLoc][1] == player]
+        display_data['available_items'] = {lookup_any_item_id_to_name[id] for id in itemPool if
+                                                id in lookup_any_item_id_to_name}
+    # display_data['dsa_template'] = lambda item: f"'acquired' if '{item}' in acquired_items else('' if not show_availableness else('available' if '{item}' in available_items))"
+    # display_data['dsa_template'] = ["'acquired' if '", "' in acquired_items else('' if not show_availableness else('available' if '", "' in available_items))"]
+
     # Victory condition
     game_state = multisave.get("client_game_state", {}).get((team, player), 0)
     display_data['game_finished'] = game_state == 30
@@ -1305,7 +1318,7 @@ def getTracker(tracker: UUID):
     video = {}
     for (team, player), data in multisave.get("video", []):
         video[(team, player)] = data
-
+    
     return render_template("tracker.html", inventory=inventory, get_item_name_from_id=lookup_any_item_id_to_name,
                            lookup_id_to_name=Items.lookup_id_to_name, player_names=player_names,
                            tracking_names=tracking_names, tracking_ids=tracking_ids, room=room, icons=alttp_icons,
