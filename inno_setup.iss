@@ -127,6 +127,7 @@ Source: "{#source_path}\ArchipelagoFF1Client.exe"; DestDir: "{app}"; Flags: igno
 Source: "{#source_path}\ArchipelagoPokemonClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/pkmn
 Source: "{#source_path}\ArchipelagoChecksFinderClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/cf
 Source: "{#source_path}\ArchipelagoStarcraft2Client.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/sc2
+Source: "{#source_path}\ArchipelagoStarcraft2HotSClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/sc2
 Source: "{#source_path}\ArchipelagoZelda1Client.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/tloz
 Source: "{#source_path}\ArchipelagoWargrooveClient.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/wargroove
 Source: "{#source_path}\ArchipelagoKH2Client.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: client/kh2
@@ -146,6 +147,7 @@ Name: "{group}\{#MyAppName} Final Fantasy 1 Client"; Filename: "{app}\Archipelag
 Name: "{group}\{#MyAppName} Pokemon Client"; Filename: "{app}\ArchipelagoPokemonClient.exe"; Components: client/pkmn
 Name: "{group}\{#MyAppName} ChecksFinder Client"; Filename: "{app}\ArchipelagoChecksFinderClient.exe"; Components: client/cf
 Name: "{group}\{#MyAppName} Starcraft 2 Client"; Filename: "{app}\ArchipelagoStarcraft2Client.exe"; Components: client/sc2
+Name: "{group}\{#MyAppName} Starcraft 2 Client"; Filename: "{app}\ArchipelagoStarcraft2HotSClient.exe"; Components: client/sc2
 Name: "{group}\{#MyAppName} The Legend of Zelda Client"; Filename: "{app}\ArchipelagoZelda1Client.exe"; Components: client/tloz
 Name: "{group}\{#MyAppName} Kingdom Hearts 2 Client"; Filename: "{app}\ArchipelagoKH2Client.exe"; Components: client/kh2
 Name: "{group}\{#MyAppName} Adventure Client"; Filename: "{app}\ArchipelagoAdventureClient.exe"; Components: client/advn
@@ -162,6 +164,7 @@ Name: "{commondesktop}\{#MyAppName} Final Fantasy 1 Client"; Filename: "{app}\Ar
 Name: "{commondesktop}\{#MyAppName} Pokemon Client"; Filename: "{app}\ArchipelagoPokemonClient.exe"; Tasks: desktopicon; Components: client/pkmn
 Name: "{commondesktop}\{#MyAppName} ChecksFinder Client"; Filename: "{app}\ArchipelagoChecksFinderClient.exe"; Tasks: desktopicon; Components: client/cf
 Name: "{commondesktop}\{#MyAppName} Starcraft 2 Client"; Filename: "{app}\ArchipelagoStarcraft2Client.exe"; Tasks: desktopicon; Components: client/sc2
+Name: "{commondesktop}\{#MyAppName} Starcraft 2 Client"; Filename: "{app}\ArchipelagoStarcraft2HotSClient.exe"; Tasks: desktopicon; Components: client/sc2
 Name: "{commondesktop}\{#MyAppName} The Legend of Zelda Client"; Filename: "{app}\ArchipelagoZelda1Client.exe"; Tasks: desktopicon; Components: client/tloz
 Name: "{commondesktop}\{#MyAppName} Wargroove Client"; Filename: "{app}\ArchipelagoWargrooveClient.exe"; Tasks: desktopicon; Components: client/wargroove
 Name: "{commondesktop}\{#MyAppName} Kingdom Hearts 2 Client"; Filename: "{app}\ArchipelagoKH2Client.exe"; Tasks: desktopicon; Components: client/kh2

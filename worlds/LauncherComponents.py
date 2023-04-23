@@ -90,6 +90,8 @@ components: List[Component] = [
     Component('ChecksFinder Client', 'ChecksFinderClient'),
     # Starcraft 2
     Component('Starcraft 2 Client', 'Starcraft2Client'),
+    # Starcraft 2 - HotS
+    Component('Starcraft 2 Client', 'Starcraft2HotSClient'),
     # Wargroove
     Component('Wargroove Client', 'WargrooveClient'),
     # Zillion
