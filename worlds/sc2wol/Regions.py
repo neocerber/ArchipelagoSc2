@@ -8,7 +8,38 @@ from .PoolFilter import filter_missions
 
 def create_regions(multiworld: MultiWorld, player: int, locations: Tuple[LocationData, ...], location_cache: List[Location])\
         -> Tuple[Dict[str, MissionInfo], int, str]:
+    
+    print(len(locations))
+    included_locations_type = ["", "Win"]
+    # if get_option_value(multiworld, player, 'win_locations') == True:
+    #     included_locations_type.append("Win")
+    if get_option_value(multiworld, player, 'bonusObj_locations') == True:
+        included_locations_type.append("BonusObj")
+    if get_option_value(multiworld, player, 'extra_locations') == True:
+        included_locations_type.append("ExtraProg")
+    if get_option_value(multiworld, player, 'challenge_locations') == True:
+        included_locations_type.append("Challenge")
+
+    # dsa Dont do if all included...
+    if True:
+        location_to_Remove = []
+        for i, location_data in enumerate(locations):
+            if location_data.category not in included_locations_type:
+                # locations.pop(i)
+                # i -= 1
+                # locations.remove(location_data)
+                location_to_Remove.append(i)
+                # print(location_data.name)
+        if len(location_to_Remove) != 0:
+            locations = list(locations)
+            for i in location_to_Remove[::-1]:
+                # print(i)
+                locations.pop(i)
+            locations = tuple(locations)
+    print(len(locations))
+
     locations_per_region = get_locations_per_region(locations)
+    print(len(locations_per_region["Shatter the Sky"]))
 
     mission_order_type = get_option_value(multiworld, player, "mission_order")
     mission_order = mission_orders[mission_order_type]
