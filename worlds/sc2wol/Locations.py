@@ -433,7 +433,7 @@ def get_locations(multiworld: Optional[MultiWorld], player: Optional[int]) -> Tu
         LocationData("Ghost of a Chance", "Ghost of a Chance: Third Island Spectres", SC2WOL_LOC_ID_OFFSET + 1605, 
                      "ExtraProg"),
         LocationData("The Great Train Robbery", "The Great Train Robbery: Victory", SC2WOL_LOC_ID_OFFSET + 1700, 
-                     "ExtraProg",
+                     "Win",
                      lambda state: state._sc2wol_has_train_killers(multiworld, player) and
                                    state._sc2wol_has_anti_air(multiworld, player)),
         LocationData("The Great Train Robbery", "The Great Train Robbery: North Defiler", SC2WOL_LOC_ID_OFFSET + 1701, 
@@ -549,7 +549,7 @@ def get_locations(multiworld: Optional[MultiWorld], player: Optional[int]) -> Tu
                      "Win",
                      lambda state: state._sc2wol_has_mm_upgrade(multiworld, player)),
         LocationData("Piercing the Shroud", "Piercing the Shroud: Holding Cell Relic", SC2WOL_LOC_ID_OFFSET + 2101, 
-                     "BonusObj"),
+                     "Win"),
         LocationData("Piercing the Shroud", "Piercing the Shroud: Brutalisk Relic", SC2WOL_LOC_ID_OFFSET + 2102, 
                      "BonusObj",
                      lambda state: state._sc2wol_has_mm_upgrade(multiworld, player)),
@@ -714,27 +714,12 @@ def get_locations(multiworld: Optional[MultiWorld], player: Optional[int]) -> Tu
         LocationData("Shatter the Sky", "Shatter the Sky: Mid Hatchery", SC2WOL_LOC_ID_OFFSET + 2808, 
                      "ExtraProg",
                      lambda state: state._sc2wol_has_competent_comp(multiworld, player)),
-        LocationData("All-In", "All-In: Victory", None, "", 
+        LocationData("All-In", "All-In: Victory", None, "Win", 
                      lambda state: state._sc2wol_final_mission_requirements(multiworld, player))
     ]
 
     beat_events = []
-    # dsa 
-    # included_locations_type = []
-    # if get_option_value(multiworld, player, 'win_locations') == True:
-    #     included_locations_type.append("Win")
-    # if get_option_value(multiworld, player, 'bonusObj_locations') == True:
-    #     included_locations_type.append("BonusObj")
-    # if get_option_value(multiworld, player, 'extra_locations') == True:
-    #     included_locations_type.append("ExtraProg")
-    # if get_option_value(multiworld, player, 'challenge_locations') == True:
-    #     included_locations_type.append("Challenge")
-
     for i, location_data in enumerate(location_table):
-        # dsa 
-        # if location_data.category not in included_locations_type:
-        #     location_table.pop(i)
-        #     continue
         # Removing all item-based logic on No Logic
         if logic_level == 2:
             location_data = location_data._replace(rule=Location.access_rule)
@@ -742,7 +727,7 @@ def get_locations(multiworld: Optional[MultiWorld], player: Optional[int]) -> Tu
         # Generating Beat event locations
         if location_data.name.endswith((": Victory", ": Defeat")):
             beat_events.append(
-                location_data._replace(name="Beat " + location_data.name.rsplit(": ", 1)[0], code=None, category="")
+                location_data._replace(name="Beat " + location_data.name.rsplit(": ", 1)[0], code=None, category="Win")
             )
 
     return tuple(location_table + beat_events)

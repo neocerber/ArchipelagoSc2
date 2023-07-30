@@ -233,7 +233,6 @@ sc2wol_options: Dict[str, Option] = {
     "nco_items": NovaCovertOpsItems,
     "bw_items": BroodWarItems,
     "ext_items": ExtendedItems,
-    # "win_locations": VictoryLocations,
     "bonusObj_locations": BonusObjLocations,
     "extra_locations": ExtraLocations,
     "challenge_locations": ChallengeLocations
