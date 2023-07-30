@@ -184,25 +184,26 @@ class ExcludedItems(ItemSet):
     """Guarantees that these items will not be unlockable"""
     display_name = "Excluded Items"
 
-class VictoryLocations(Toggle):
-    """If turned on, locations associated to a mission victory give an item"""
-    display_name = "Victory Locations"
-    default = True
-
 class BonusObjLocations(Toggle):
     """If turned on, locations associated to bonus ojectives give an item"""
     display_name = "Bonus objective Locations"
     default = True
 
-class ExtraLocations(Toggle):
-    """If turned on, locations associated to dsa give an item"""
-    display_name = "Extra Locations"
+class MissionProgLocations(Toggle):
+    """If turned on, locations associated to mission progress give an item"""
+    display_name = "Mission progression Locations"
     default = False
 
 class ChallengeLocations(Toggle):
     """If turned on, locations associated to challenge give an item"""
     display_name = "Challenge Locations"
     default = False
+
+
+class OptiBossLocations(Toggle):
+    """If turned on, locations associated to optional boss give an item"""
+    display_name = "Optional boss Locations"
+    default = True
 
 
 class ExcludedMissions(OptionSet):
@@ -234,8 +235,9 @@ sc2wol_options: Dict[str, Option] = {
     "bw_items": BroodWarItems,
     "ext_items": ExtendedItems,
     "bonusObj_locations": BonusObjLocations,
-    "extra_locations": ExtraLocations,
-    "challenge_locations": ChallengeLocations
+    "missionProg_locations": MissionProgLocations,
+    "challenge_locations": ChallengeLocations,
+    "optiBoss_locations": OptiBossLocations
 }
 
 

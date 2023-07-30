@@ -9,16 +9,20 @@ from .PoolFilter import filter_missions
 def create_regions(multiworld: MultiWorld, player: int, locations: Tuple[LocationData, ...], location_cache: List[Location])\
         -> Tuple[Dict[str, MissionInfo], int, str]:
     
-    included_locations_type = ["Win", "BonusObj", "ExtraProg", "Challenge"]
+    included_locations_type = ["Win", "MissionProg", "BonusObj", 
+                               "Challenge", "OptiBoss"]
     nb_location_type = len(included_locations_type)
     if get_option_value(multiworld, player, 'bonusObj_locations') == False:
         included_locations_type.remove("BonusObj")
-    if get_option_value(multiworld, player, 'extra_locations') == False:
-        included_locations_type.remove("ExtraProg")
+    if get_option_value(multiworld, player, 'missionProg_locations') == False:
+        included_locations_type.remove("MissionProg")
     if get_option_value(multiworld, player, 'challenge_locations') == False:
         included_locations_type.remove("Challenge")
+    if get_option_value(multiworld, player, 'optiBoss_locations') == False:
+        included_locations_type.remove("OptiBoss")
     if len(included_locations_type) == 1:
-        print("Highly possible that it won't generate. dsa")
+        # Not sure how to procress this...
+        raise Exception("At least one other locations type needs to be enabled")
 
     # Only check to remove locations if it was asked for
     if len(included_locations_type) != nb_location_type:
