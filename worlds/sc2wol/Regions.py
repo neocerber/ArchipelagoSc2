@@ -1,6 +1,6 @@
 from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location
-from .Locations import LocationData
+from .Locations import LocationData, MissionCategory
 from .Options import get_option_value
 from .MissionTables import MissionInfo, mission_orders, vanilla_mission_req_table, alt_final_mission_locations, MissionPools
 from .PoolFilter import filter_missions
@@ -9,17 +9,16 @@ from .PoolFilter import filter_missions
 def create_regions(multiworld: MultiWorld, player: int, locations: Tuple[LocationData, ...], location_cache: List[Location])\
         -> Tuple[Dict[str, MissionInfo], int, str]:
     
-    included_locations_type = ["Win", "MissionProg", "BonusObj", 
-                               "Challenge", "OptiBoss"]
+    included_locations_type = [m for m in MissionCategory]
     nb_location_type = len(included_locations_type)
-    if get_option_value(multiworld, player, 'bonusObj_locations') == False:
-        included_locations_type.remove("BonusObj")
-    if get_option_value(multiworld, player, 'missionProg_locations') == False:
-        included_locations_type.remove("MissionProg")
+    if get_option_value(multiworld, player, 'bonus_obj_locations') == False:
+        included_locations_type.remove(MissionCategory.BONUS_OBJ)
+    if get_option_value(multiworld, player, 'mission_prog_locations') == False:
+        included_locations_type.remove(MissionCategory.MISSION_PROG)
     if get_option_value(multiworld, player, 'challenge_locations') == False:
-        included_locations_type.remove("Challenge")
-    if get_option_value(multiworld, player, 'optiBoss_locations') == False:
-        included_locations_type.remove("OptiBoss")
+        included_locations_type.remove(MissionCategory.CHALLENGE)
+    if get_option_value(multiworld, player, 'optional_boss_locations') == False:
+        included_locations_type.remove(MissionCategory.OPTI_BOSS)
     if len(included_locations_type) == 1:
         # Not sure how to procress this...
         raise Exception("At least one other locations type needs to be enabled")
