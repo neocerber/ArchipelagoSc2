@@ -62,15 +62,15 @@ item_table = {
     "Progressive Armor Upgrade": ItemData(108 + SC2WOL_ITEM_ID_OFFSET, "Upgrade", 1, quantity=3),
     "Progressive Infantry Upgrade": ItemData(109 + SC2WOL_ITEM_ID_OFFSET, "Upgrade", 2, quantity=3),
     "Progressive Vehicle Upgrade": ItemData(110 + SC2WOL_ITEM_ID_OFFSET, "Upgrade", 3, quantity=3),
-    "Progressive Starship Upgrade": ItemData(111 + SC2WOL_ITEM_ID_OFFSET, "Upgrade", 4, quantity=3),
+    "Progressive Ship Upgrade": ItemData(111 + SC2WOL_ITEM_ID_OFFSET, "Upgrade", 4, quantity=3),
     "Progressive Upgrade": ItemData(112 + SC2WOL_ITEM_ID_OFFSET, "Upgrade", 5, quantity=3),
 
     "Projectile Accelerator (Bunker)": ItemData(200 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 0, parent_item="Bunker"),
     "Neosteel Bunker (Bunker)": ItemData(201 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 1, parent_item="Bunker"),
     "Titanium Housing (Missile Turret)": ItemData(202 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 2, classification=ItemClassification.filler, parent_item="Missile Turret"),
     "Hellstorm Batteries (Missile Turret)": ItemData(203 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 3, parent_item="Missile Turret"),
-    "Advanced Construction (SCV)": ItemData(204 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 4, parent_item="SCV"),
-    "Dual-Fusion Welders (SCV)": ItemData(205 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 5, parent_item="SCV"),
+    "Advanced Construction (SCV)": ItemData(204 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 4),
+    "Dual-Fusion Welders (SCV)": ItemData(205 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 5),
     "Fire-Suppression System (Building)": ItemData(206 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 6),
     "Orbital Command (Building)": ItemData(207 + SC2WOL_ITEM_ID_OFFSET, "Armory 1", 7),
     "Progressive Stimpack (Marine)": ItemData(208 + SC2WOL_ITEM_ID_OFFSET, "Progressive Upgrade", 0, parent_item="Marine", quantity=2),
@@ -245,9 +245,13 @@ item_table = {
     "Void Ray": ItemData(707 + SC2WOL_ITEM_ID_OFFSET, "Protoss", 7, classification=ItemClassification.progression),
     "Carrier": ItemData(708 + SC2WOL_ITEM_ID_OFFSET, "Protoss", 8, classification=ItemClassification.progression),
 
+    # Filler items to fill remaining spots
     "+15 Starting Minerals": ItemData(800 + SC2WOL_ITEM_ID_OFFSET, "Minerals", 15, quantity=0, classification=ItemClassification.filler),
     "+15 Starting Vespene": ItemData(801 + SC2WOL_ITEM_ID_OFFSET, "Vespene", 15, quantity=0, classification=ItemClassification.filler),
+    # This Filler item isn't placed by the generator yet unless plando'd
     "+2 Starting Supply": ItemData(802 + SC2WOL_ITEM_ID_OFFSET, "Supply", 2, quantity=0, classification=ItemClassification.filler),
+    # This item is used to "remove" location from the game. Never placed unless plando'd
+    "Nothing": ItemData(803 + SC2WOL_ITEM_ID_OFFSET, "Nothing", 2, quantity=0, classification=ItemClassification.trap),
 
     # "Keystone Piece": ItemData(850 + SC2WOL_ITEM_ID_OFFSET, "Goal", 0, quantity=0, classification=ItemClassification.progression_skip_balancing)
 }
@@ -284,6 +288,42 @@ for item, data in get_full_item_list().items():
         short_name = item[:item.find(' (')]
         item_name_groups[short_name] = [item]
 item_name_groups["Missions"] = ["Beat " + mission_name for mission_name in vanilla_mission_req_table]
+
+
+# Items that can be placed before resources if not already in
+# General upgrades and Mercs
+second_pass_placeable_items: typing.Tuple[str, ...] = (
+    # Buildings without upgrades
+    "Sensor Tower",
+    "Hive Mind Emulator",
+    "Psi Disrupter",
+    "Perdition Turret",
+    # General upgrades without any dependencies
+    "Advanced Construction (SCV)",
+    "Dual-Fusion Welders (SCV)",
+    "Fire-Suppression System (Building)",
+    "Orbital Command (Building)",
+    "Ultra-Capacitors",
+    "Vanadium Plating",
+    "Orbital Depots",
+    "Micro-Filtering",
+    "Automated Refinery",
+    "Command Center Reactor",
+    "Tech Reactor",
+    "Planetary Fortress",
+    "Cellular Reactor",
+    "Progressive Regenerative Bio-Steel",  # Place only L1
+    # Mercenaries
+    "War Pigs",
+    "Devil Dogs",
+    "Hammer Securities",
+    "Spartan Company",
+    "Siege Breakers",
+    "Hel's Angel",
+    "Dusk Wings",
+    "Jackson's Revenge"
+)
+
 
 filler_items: typing.Tuple[str, ...] = (
     '+15 Starting Minerals',
@@ -376,5 +416,6 @@ type_flaggroups: typing.Dict[str, int] = {
     "Goal": 11,
     "Armory 3": 12,  # Unit upgrades
     "Armory 4": 13,  # Unit upgrades
-    "Progressive Upgrade": 14  # Unit upgrades that exist multiple times (Stimpack / Super Stimpack)
+    "Progressive Upgrade": 14,  # Unit upgrades that exist multiple times (Stimpack / Super Stimpack)
+    "Nothing": 15
 }

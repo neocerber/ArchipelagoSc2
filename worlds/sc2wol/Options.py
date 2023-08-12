@@ -3,6 +3,8 @@ from BaseClasses import MultiWorld
 from Options import Choice, Option, Toggle, DefaultOnToggle, ItemSet, OptionSet, Range
 from .MissionTables import vanilla_mission_req_table
 
+ORDER_VANILLA = 0
+ORDER_VANILLA_SHUFFLED = 1
 
 class GameDifficulty(Choice):
     """The difficulty of the campaign, affects enemy AI, starting units, and game speed."""
@@ -23,6 +25,22 @@ class GameSpeed(Choice):
     option_faster = 5
     default = option_default
 
+class FinalMap(Choice):
+    """
+    Determines if the final map and goal of the campaign.
+    All in: You need to beat All-in map
+    Random Hard: A random hard mission is selected as a goal.
+                Beat this mission in order to complete the game.
+                All-in map won't be in the campaign
+
+    Vanilla mission order always ends with All in mission!
+
+    This option is short-lived. It may be changed in the future
+    """
+    display_name = "Final Map"
+    option_all_in = 0
+    option_random_hard = 1
+
 class AllInMap(Choice):
     """Determines what version of All-In (final map) that will be generated for the campaign."""
     display_name = "All In Map"
@@ -31,14 +49,18 @@ class AllInMap(Choice):
 
 
 class MissionOrder(Choice):
-    """Determines the order the missions are played in.  The last three mission orders end in a random mission.
+    """
+    Determines the order the missions are played in.  The last three mission orders end in a random mission.
     Vanilla (29): Keeps the standard mission order and branching from the WoL Campaign.
     Vanilla Shuffled (29): Keeps same branching paths from the WoL Campaign but randomizes the order of missions within.
     Mini Campaign (15): Shorter version of the campaign with randomized missions and optional branches.
-    Grid (16):  A 4x4 grid of random missions.  Start at the top-left and forge a path towards All-In.
+    Grid (16):  A 4x4 grid of random missions.  Start at the top-left and forge a path towards bottom-right mission to win.
     Mini Grid (9):  A 3x3 version of Grid.  Complete the bottom-right mission to win.
     Blitz (12):  12 random missions that open up very quickly.  Complete the bottom-right mission to win.
-    Gauntlet (7): Linear series of 7 random missions to complete the campaign."""
+    Gauntlet (7): Linear series of 7 random missions to complete the campaign.
+    Mini Gauntlet (4): Linear series of 4 random missions to complete the campaign.
+    Tiny Grid (4): A 2x2 version of Grid.  Complete the bottom-right mission to win.
+    """
     display_name = "Mission Order"
     option_vanilla = 0
     option_vanilla_shuffled = 1
@@ -47,6 +69,8 @@ class MissionOrder(Choice):
     option_mini_grid = 4
     option_blitz = 5
     option_gauntlet = 6
+    option_mini_gauntlet = 7
+    option_tiny_grid = 8
 
 
 class PlayerColor(Choice):
@@ -218,6 +242,7 @@ sc2wol_options: Dict[str, Option] = {
     "game_difficulty": GameDifficulty,
     "game_speed": GameSpeed,
     "all_in_map": AllInMap,
+    "final_map": FinalMap,
     "mission_order": MissionOrder,
     "player_color": PlayerColor,
     "shuffle_protoss": ShuffleProtoss,

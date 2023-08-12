@@ -1,9 +1,9 @@
 from typing import Callable, Dict, List, Set
 from BaseClasses import MultiWorld, ItemClassification, Item, Location
-from .Items import get_full_item_list, spider_mine_sources
+from .Items import get_full_item_list, spider_mine_sources, second_pass_placeable_items
 from .MissionTables import no_build_regions_list, easy_regions_list, medium_regions_list, hard_regions_list,\
     mission_orders, MissionInfo, alt_final_mission_locations, MissionPools
-from .Options import get_option_value
+from .Options import get_option_value, MissionOrder, FinalMap
 from .LogicMixin import SC2WoLLogic
 
 # Items with associated upgrades
@@ -30,7 +30,7 @@ def filter_missions(multiworld: MultiWorld, player: int) -> Dict[int, List[str]]
     shuffle_no_build = get_option_value(multiworld, player, "shuffle_no_build")
     shuffle_protoss = get_option_value(multiworld, player, "shuffle_protoss")
     excluded_missions = get_option_value(multiworld, player, "excluded_missions")
-    mission_count = len(mission_orders[mission_order_type]) - 1
+    final_map = get_option_value(multiworld, player, "final_map")
     mission_pools = {
         MissionPools.STARTER: no_build_regions_list[:],
         MissionPools.EASY: easy_regions_list[:],
@@ -38,21 +38,18 @@ def filter_missions(multiworld: MultiWorld, player: int) -> Dict[int, List[str]]
         MissionPools.HARD: hard_regions_list[:],
         MissionPools.FINAL: []
     }
-    if mission_order_type == 0:
+    if mission_order_type == MissionOrder.option_vanilla:
         # Vanilla uses the entire mission pool
         mission_pools[MissionPools.FINAL] = ['All-In']
         return mission_pools
-    elif mission_order_type == 1:
-        # Vanilla Shuffled ignores the player-provided excluded missions
-        excluded_missions = set()
     # Omitting No-Build missions if not shuffling no-build
     if not shuffle_no_build:
         excluded_missions = excluded_missions.union(no_build_regions_list)
     # Omitting Protoss missions if not shuffling protoss
     if not shuffle_protoss:
         excluded_missions = excluded_missions.union(PROTOSS_REGIONS)
-    # Replacing All-In on low mission counts
-    if mission_count < 14:
+    # Replacing All-In with alternate ending depending on option
+    if final_map == FinalMap.option_random_hard:
         final_mission = multiworld.random.choice([mission for mission in alt_final_mission_locations.keys() if mission not in excluded_missions])
         excluded_missions.add(final_mission)
     else:
@@ -138,14 +135,17 @@ class ValidInventory:
             while existing_items:
                 existing_item = existing_items.pop()
                 items_to_lock = self.cascade_removal_map.get(existing_item, [existing_item])
-                for item in items_to_lock:
-                    if item in inventory:
-                        for _ in range(inventory.count(item)):
-                            inventory.remove(item)
-                        if item not in locked_items:
-                            # Lock all the associated items if not already locked
-                            for _ in range(get_item_quantity(item)):
-                                locked_items.append(copy_item(item))
+                if get_full_item_list()[existing_item.name].type != "Upgrade":
+                    # Don't process general upgrades, they may have been pre-locked per-level
+                    for item in items_to_lock:
+                        if item in inventory:
+                            # Unit upgrades, lock all levels
+                            for _ in range(inventory.count(item)):
+                                inventory.remove(item)
+                            if item not in locked_items:
+                                # Lock all the associated items if not already locked
+                                for _ in range(get_item_quantity(item)):
+                                    locked_items.append(copy_item(item))
                     if item in existing_items:
                         existing_items.remove(item)
 
@@ -210,8 +210,28 @@ class ValidInventory:
 
         if not spider_mine_sources & self.logical_inventory:
             inventory = [item for item in inventory if not item.name.endswith("(Spider Mine)")]
+        if not BARRACKS_UNITS & self.logical_inventory:
+            inventory = [item for item in inventory if
+                         not (item.name.startswith("Progressive Infantry") or item.name == "Orbital Strike")]
+        if not FACTORY_UNITS & self.logical_inventory:
+            inventory = [item for item in inventory if not item.name.startswith("Progressive Vehicle")]
+        if not STARPORT_UNITS & self.logical_inventory:
+            inventory = [item for item in inventory if not item.name.startswith("Progressive Ship")]
 
-        return inventory + locked_items
+        # Cull finished, adding locked items back into inventory
+        inventory += locked_items
+
+        # Replacing empty space with generically useful items
+        replacement_items = [item for item in self.item_pool
+                             if (item not in inventory
+                                 and item not in self.locked_items
+                                 and item.name in second_pass_placeable_items)]
+        self.multiworld.random.shuffle(replacement_items)
+        while len(inventory) < inventory_size and len(replacement_items) > 0:
+            item = replacement_items.pop()
+            inventory.append(item)
+
+        return inventory
 
     def _read_logic(self):
         self._sc2wol_has_common_unit = lambda world, player: SC2WoLLogic._sc2wol_has_common_unit(self, world, player)
