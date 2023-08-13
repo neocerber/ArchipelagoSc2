@@ -5,12 +5,16 @@ from BaseClasses import Item, MultiWorld, Location, Tutorial, ItemClassification
 from worlds.AutoWorld import WebWorld, World
 from .Items import StarcraftWoLItem, filler_items, item_name_groups, get_item_table, get_full_item_list, \
     get_basic_units, ItemData, upgrade_included_names, progressive_if_nco
-from .Locations import get_locations
+from .Locations import get_locations, MissionCategory
 from .Regions import create_regions
 from .Options import sc2wol_options, get_option_value
 from .LogicMixin import SC2WoLLogic
 from .PoolFilter import filter_missions, filter_items, get_item_upgrades
 from .MissionTables import starting_mission_locations, MissionInfo
+
+import os
+import json
+from pathlib import Path
 
 
 class Starcraft2WoLWebWorld(WebWorld):
@@ -47,6 +51,20 @@ class SC2WoLWorld(World):
     final_mission_id: int
     victory_item: str
     required_client_version = 0, 3, 6
+
+    # Update the default locations partition
+    fname = os.path.join(Path(__file__).parent, "data", "locations_default.json")
+    default_location_partition = {}
+    for cMissionCategory in MissionCategory:
+        default_location_partition[cMissionCategory.name] = []
+    for location_data in get_locations(None, None):
+        # Used to skip All-in and the 'Beat' location 
+        if location_data.category is not None:
+            default_location_partition[location_data.category.name].append(location_data.name)
+    for cMissionCategory in MissionCategory:
+        default_location_partition[cMissionCategory.name].sort()
+    with open(fname, 'w') as file:
+        file.write(json.dumps(default_location_partition, indent=4))   
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super(SC2WoLWorld, self).__init__(multiworld, player)

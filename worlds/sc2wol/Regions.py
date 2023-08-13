@@ -1,6 +1,6 @@
 from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location
-from .Locations import LocationData, MissionCategory
+from .Locations import LocationData
 from .Options import get_option_value, MissionOrder
 from .MissionTables import MissionInfo, mission_orders, vanilla_mission_req_table, alt_final_mission_locations, \
     MissionPools, vanilla_shuffle_order
@@ -13,29 +13,36 @@ VANILLA_SHUFFLED_FIRST_PROPHECY_MISSION = 21
 def create_regions(multiworld: MultiWorld, player: int, locations: Tuple[LocationData, ...], location_cache: List[Location])\
         -> Tuple[Dict[str, MissionInfo], int, str]:
     
-    included_locations_type = [m for m in MissionCategory]
-    nb_location_type = len(included_locations_type)
-    if get_option_value(multiworld, player, 'bonus_obj_locations') == False:
-        included_locations_type.remove(MissionCategory.BONUS_OBJ)
-    if get_option_value(multiworld, player, 'mission_prog_locations') == False:
-        included_locations_type.remove(MissionCategory.MISSION_PROG)
-    if get_option_value(multiworld, player, 'challenge_locations') == False:
-        included_locations_type.remove(MissionCategory.CHALLENGE)
-    if get_option_value(multiworld, player, 'optional_boss_locations') == False:
-        included_locations_type.remove(MissionCategory.OPTI_BOSS)
-    if len(included_locations_type) == 1:
-        # Not sure how to procress this...
-        raise Exception("At least one other locations type needs to be enabled")
+    locations_with_item = set(get_option_value(multiworld, player, 'locations_with_item'))
+    empty_locations = set(get_option_value(multiworld, player, 'empty_locations'))
+    excluded_locations = set(get_option_value(multiworld, player, 'exclude_locations'))
+    print(excluded_locations)
 
-    # Only check to remove locations if it was asked for
-    if len(included_locations_type) != nb_location_type:
-        location_to_Remove = []
+    # Ensure no locations were defined in more than one list
+    locations_assigned_multipletime = set.intersection(locations_with_item, empty_locations)
+    locations_assigned_multipletime.update(locations_with_item.intersection(excluded_locations))
+    locations_assigned_multipletime.update(empty_locations.intersection(excluded_locations))
+    if len(locations_assigned_multipletime) != 0:
+        raise Exception(f"The following locations are in more than one state: {locations_assigned_multipletime}")
+
+    # Ensure that all possible locations, given the current Region pool, are assigned to one of the type 
+    # locations_not_assigned =  set([loc.name for loc in locations if ((not loc.name.startswith("Beat")) and (loc.name != "All-In: Victory"))]) \
+    #                             - set.union(locations_with_item, empty_locations, excluded_locations)
+    locations_not_assigned =  set([loc.name for loc in locations if loc.category is not None]) \
+                                - set.union(locations_with_item, empty_locations, excluded_locations)
+    if len(locations_not_assigned) != 0:
+        raise Exception(f"The following locations are not in any of the three state: {locations_not_assigned}")
+
+    # Only check to remove locations if there is at least one.
+    if len(empty_locations) != 0:
+        locations_to_remove = []
+        # We can only remove location that exist in the current region pool.
         for i, location_data in enumerate(locations):
-            if location_data.category not in included_locations_type:
-                location_to_Remove.append(i)
-        if len(location_to_Remove) != 0:
+            if location_data.name in empty_locations:
+                locations_to_remove.append(i)
+        if len(locations_to_remove) != 0:
             locations = list(locations)
-            for i in location_to_Remove[::-1]:
+            for i in locations_to_remove[::-1]:
                 locations.pop(i)
             locations = tuple(locations)
 

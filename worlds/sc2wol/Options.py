@@ -1,7 +1,15 @@
 from typing import Dict, FrozenSet, Union
 from BaseClasses import MultiWorld
-from Options import Choice, Option, Toggle, DefaultOnToggle, ItemSet, OptionSet, Range
+from Options import Choice, Option, Toggle, DefaultOnToggle, ItemSet, OptionSet, Range, OptionList
 from .MissionTables import vanilla_mission_req_table
+
+import os
+import json
+import pkgutil
+
+def load_data_file(*args) -> dict:
+    fname = os.path.join("data", *args)
+    return json.loads(pkgutil.get_data(__name__, fname).decode())
 
 ORDER_VANILLA = 0
 ORDER_VANILLA_SHUFFLED = 1
@@ -208,27 +216,6 @@ class ExcludedItems(ItemSet):
     """Guarantees that these items will not be unlockable"""
     display_name = "Excluded Items"
 
-class BonusObjLocations(Toggle):
-    """If turned on, locations associated to bonus ojectives give an item"""
-    display_name = "Bonus objective Locations"
-    default = True
-
-class MissionProgLocations(Toggle):
-    """If turned on, locations associated to mission progress give an item"""
-    display_name = "Mission progression Locations"
-    default = False
-
-class ChallengeLocations(Toggle):
-    """If turned on, locations associated to challenge give an item"""
-    display_name = "Challenge Locations"
-    default = False
-
-
-class OptiBossLocations(Toggle):
-    """If turned on, locations associated to optional boss give an item"""
-    display_name = "Optional boss Locations"
-    default = True
-
 
 class ExcludedMissions(OptionSet):
     """Guarantees that these missions will not appear in the campaign
@@ -236,6 +223,53 @@ class ExcludedMissions(OptionSet):
     It may be impossible to build a valid campaign if too many missions are excluded."""
     display_name = "Excluded Missions"
     valid_keys = {mission_name for mission_name in vanilla_mission_req_table.keys() if mission_name != 'All-In'}
+
+
+class EmptyLocations(OptionList):
+    """List of locations that will be removed which means that they no longer count as a check and 
+    does not provide an item. 
+
+    All locations must be in one of the three options: 'empty_locations', 'locations_with_item' or 'exclude_locations'
+    Note that putting location used for EarlyUnit (a subset of the BASIC category) in this list could break generation.
+
+    In the default template, all the locations in the category CHALLENGE and MISSION_PROG (see 'data/locations_default.json') are put here. 
+    If a user desire to change the locations in those category in the default template, create a file named 'locations.json'
+    in the data folder this new file will be used to initiate the next default template."""
+    display_name = "Empty locations"
+    verify_location_name = True
+    location_category = ["CHALLENGE", "MISSION_PROG"]
+                         
+    default = []
+    try:
+        locations_default_partition = load_data_file("locations.json")
+    except FileNotFoundError:
+        locations_default_partition = load_data_file("locations_default.json")
+    for cCategory in location_category:
+        default += locations_default_partition[cCategory]
+    # Make it easier to parse for the user.
+    default.sort()
+
+class LocationsWithItem(OptionList):
+    """List of locations where an item can be placed. 
+
+    All locations must be in one and only one of the three options: 'empty_locations', 'locations_with_item' or 'exclude_locations'
+
+    In the default template, all the locations in the category CHALLENGE and MISSION_PROG (see 'data/locations_default.json') are put here. 
+    If a user desire to change the locations in those category in the default template, create a file named 'locations.json'
+    in the data folder this new file will be used to initiate the next default template."""
+    display_name = "Locations with item"
+    verify_location_name = True
+    location_category = ["BASIC", "BONUS_OBJ", "OPTI_BOSS"]
+
+    default = []
+    try:
+        locations_default_partition = load_data_file("locations.json")
+    except FileNotFoundError:
+        locations_default_partition = load_data_file("locations_default.json")
+    for cCategory in location_category:
+        default += locations_default_partition[cCategory]
+    # Make it easier to parse for the user.
+    default.sort()
 
 # noinspection PyTypeChecker
 sc2wol_options: Dict[str, Option] = {
@@ -259,10 +293,8 @@ sc2wol_options: Dict[str, Option] = {
     "nco_items": NovaCovertOpsItems,
     "bw_items": BroodWarItems,
     "ext_items": ExtendedItems,
-    "bonus_obj_locations": BonusObjLocations,
-    "mission_prog_locations": MissionProgLocations,
-    "challenge_locations": ChallengeLocations,
-    "optional_boss_locations": OptiBossLocations
+    "locations_with_item": LocationsWithItem,
+    "empty_locations": EmptyLocations
 }
 
 
