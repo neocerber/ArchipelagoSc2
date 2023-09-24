@@ -11,19 +11,19 @@ from .Locations import locations
 from .Rules import get_rules
 from .Names import names as el
 
-__ELGAME__ = "Ender Lilies"
+ENDERLILIES = "Ender Lilies"
 
 class EnderLiliesItem(Item):
-    game = __ELGAME__
+    game = ENDERLILIES
 
 class EnderLiliesLocation(Location):
-    game = __ELGAME__
+    game = ENDERLILIES
 
 class EnderLiliesWorld(World):
     """
     Ender Lilies: QUIETUS OF THE KNIGHTS
     """
-    game                = __ELGAME__
+    game                = ENDERLILIES
     location_name_to_id = { name: data.address for name, data in locations.items() }
     item_name_to_id     = { name: data.code for name, data in items.items() }
 
