@@ -46,12 +46,13 @@ class EnderLiliesWorld(World):
         self.multiworld.regions.extend(regions.values())
         regions["Menu"].connect(regions["Game"])
         for location, data in locations.items():
-            entrance = EnderLiliesLocation(self.player, location, data.address, regions["Game"])
+            check = EnderLiliesLocation(self.player, location, data.address, regions["Game"])
             if not data.address:
-                entrance.show_in_spoiler = False
-                entrance.event = True
-                entrance.place_locked_item(self.create_item(data.content))
-            regions["Game"].locations.append(entrance)
+                check.show_in_spoiler = False
+                check.event = True
+                check.place_locked_item(self.create_item(data.content))
+            regions["Game"].locations.append(check)
+
 
     def set_rules(self) -> None:
         locations_rules, items_rules = get_rules(self.player)
@@ -66,6 +67,7 @@ class EnderLiliesWorld(World):
             add_item_rule(self.multiworld.get_location(name, self.player), rule)
 
         set_rule(self.multiworld.get_location(el['Start'], self.player), lambda state : True)
+        self.multiworld.completion_condition[self.player] = lambda state: state.has(el["Abyss03Left"], self.player)
 
     def generate_output(self, output_directory: str) -> None:
         filename = f"{self.multiworld.get_player_name(self.player)}.EnderLiliesSeed.txt"
