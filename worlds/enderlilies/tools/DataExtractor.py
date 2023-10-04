@@ -1,9 +1,9 @@
 import json
 import re
 
-from typing import Dict
+from typing import Dict, List
 
-json_path       = "worlds/enderlilies/data/EnderLilies.Randomizer.json"
+json_path       = "worlds/enderlilies/tools/EnderLilies.Randomizer.json"
 names_path      = "worlds/enderlilies/Names.py"
 items_path      = "worlds/enderlilies/Items.py"
 locations_path  = "worlds/enderlilies/Locations.py"
@@ -152,9 +152,9 @@ with open(items_path, "w") as items_py:
     count: Optional[int]\n\
     classification: IC\n", file=items_py)
     print("items : Dict[str, ItemData]= {", file=items_py)
-    keys : list[str] = list(items.keys())
+    keys : List[str] = list(items.keys())
     keys.sort()
-    code = 1
+    code = 0x7171E5
     maxlen = len(max(keys, key=len))
     for item in keys:
         print(f"\t'{item}'{''.ljust(maxlen - len(item))} : ItemData(code={code:#0{4}x}, count={str(items[item][0]).ljust(2)}, classification=IC.{items[item][1]}),", file=items_py)
@@ -168,7 +168,7 @@ with open(locations_path, "w") as locations_py:
     address: Optional[int]\n\
     content: str\n", file=locations_py)
     
-    address = 1
+    address = 0x7171E5
     maxlen = max(len(max(locations.keys(), key=len)),
                  len(max(events.keys(), key=len)))
     print("locations : Dict[str, LocationData]= {", file=locations_py)
