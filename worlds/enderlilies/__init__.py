@@ -10,6 +10,7 @@ from .Items import items
 from .Locations import locations
 from .Rules import get_rules
 from .Names import names as el
+from .Options import el_options
 
 ENDERLILIES = "Ender Lilies"
 
@@ -24,6 +25,7 @@ class EnderLiliesWorld(World):
     Ender Lilies: QUIETUS OF THE KNIGHTS
     """
     game                = ENDERLILIES
+    option_definitions = el_options
     location_name_to_id = { name: data.address for name, data in locations.items() }
     item_name_to_id     = { name: data.code for name, data in items.items() }
 
@@ -55,7 +57,7 @@ class EnderLiliesWorld(World):
 
 
     def set_rules(self) -> None:
-        locations_rules, items_rules = get_rules(self.player)
+        locations_rules, items_rules = get_rules(self.multiworld, self.player)
         player = self.player        
 
         can_contain_map = lambda item : item.player == player and item.name.startswith('Map.')

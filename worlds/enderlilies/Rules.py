@@ -1,8 +1,9 @@
 from typing import Dict, Tuple
 from worlds.generic.Rules import CollectionRule, ItemRule
 from .Names import names as el
+from .Options import get_option_value
 
-def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]: 
+def get_rules(m, p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]: 
 
 	macros : Dict[str, CollectionRule] = {
 		'3LEDGE'      : lambda s : s.has(el['djump'], p) and s.has(el['silva'], p) and s.has(el['champion'], p),
@@ -776,8 +777,18 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		'starting_weapon'                                                         : lambda s : True,
 	}
 
+	val = get_option_value(m, p, "starting_spirit")
+	if val == 0: 
+		start_item_rule = lambda item : item.player == p and item.name == 'Spirit.s5000'
+	elif val == 1: 
+		start_item_rule = lambda item : item.player == p and item.name.startswith('Spirit.s5')
+	elif val == 2: 
+		start_item_rule = lambda item : item.player == p and item.name.startswith('Spirit.')
+	elif val == 3: 
+		start_item_rule = lambda s : True
+
 	items_rules : Dict[str, ItemRule] = {
-		'starting_weapon' : lambda item : item.player == p and item.name.startswith('Spirit.'),
+		'starting_weapon' : start_item_rule,
 	}
 
 	return (locations_rules, items_rules)
