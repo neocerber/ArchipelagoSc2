@@ -2,11 +2,11 @@ import json
 import os
 
 from worlds.AutoWorld import World
-from BaseClasses import ItemClassification, Region, Item, Location
+from BaseClasses import ItemClassification, Region, Item, Location, MultiWorld
 from worlds.generic.Rules import set_rule, add_item_rule
 from typing import Any, Dict
 
-from .Items import items
+from .Items import items, ItemData
 from .Locations import locations
 from .Rules import get_rules
 from .Names import names as el
@@ -34,6 +34,8 @@ class EnderLiliesWorld(World):
             return EnderLiliesItem(item, ItemClassification.progression, None, self.player)
 
     def create_items(self) -> None:
+        filter_items_to_locations_number(self.multiworld, items) 
+
         for item, data in items.items():
             for i in range(data.count):
                 self.multiworld.itempool.append(self.create_item(item))
@@ -90,3 +92,21 @@ class EnderLiliesWorld(World):
                 else:
                     slot_data[location.name] = f"AP.{location.address}"
         return slot_data
+
+def filter_items_to_locations_number(multiworld: MultiWorld, items):
+    # Not sure how to differ locations with item and entrance. Using address for now...
+    nb_locations_items = len([x for x in locations if locations[x].address is not None])
+    nb_items = sum([items[x].count for x in items])
+    nb_excedant_items = nb_items - nb_locations_items
+    if nb_excedant_items > 0:
+        items_valid_to_discard = sorted(x for x in items if items[x].classification == ItemClassification.filler)
+        for i in range(nb_excedant_items):
+            discard_candidate = multiworld.random.choice(items_valid_to_discard)
+            if items[discard_candidate].count == 1:
+                del items[discard_candidate] 
+                items_valid_to_discard.remove(discard_candidate)
+            else:
+                items[discard_candidate] = ItemData(code=items[discard_candidate].code, 
+                                                    count=items[discard_candidate].count - 1, 
+                                                    classification=items[discard_candidate].classification)
+
