@@ -60,7 +60,7 @@ class EnderLiliesWorld(World):
 
 
     def set_rules(self) -> None:
-        locations_rules, items_rules = get_rules(self.multiworld, self.player)
+        locations_rules, items_rules = get_rules(self.player)
         player = self.player        
 
         can_contain_map = lambda item : item.player == player and item.name.startswith('Map.')
