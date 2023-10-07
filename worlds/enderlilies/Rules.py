@@ -2,7 +2,7 @@ from typing import Dict, Tuple
 from worlds.generic.Rules import CollectionRule, ItemRule
 from .Names import names as el
 
-def get_rules(m, p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]: 
+def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]: 
 
 	macros : Dict[str, CollectionRule] = {
 		'3LEDGE'      : lambda s : s.has(el['djump'], p) and s.has(el['silva'], p) and s.has(el['champion'], p),

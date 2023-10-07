@@ -106,8 +106,6 @@ def assign_starting_item(multiworld: MultiWorld, player: int, items) -> str:
         spirit_list = [x for x in list(items.keys()) if x.startswith('Spirit.s5')]
     elif val == 2: 
         spirit_list = [x for x in list(items.keys()) if x.startswith('Spirit.s')]
-    elif val == 3: 
-        return None
 
     avail_spirit = sorted(item for item in spirit_list if item not in non_local_items)
     if not avail_spirit:
