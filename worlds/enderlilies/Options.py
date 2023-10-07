@@ -38,6 +38,18 @@ class StartingSpirit(Choice):
     option_any = 2
     default = option_vanilla
 
+class ItemFilterBehavior(Choice):
+    """Defines how items are filtered to ensure that the number of items provided by the world match its number of locations.
+
+    filler: Only items classified as filler will be considered. (i.e. lore)
+    nonProgressive: All items that are not progressive will be considered. (i.e. useful + filler)
+    nothing: Do not remove any items prior letting the multiworld choose what it keeps. """
+    display_name = "Item filter behavior"
+    option_filler = 0
+    option_nonProgressive = 1
+    option_nothing = 2
+    default = option_filler
+
 el_options: Dict[str, type(Option)] = {
     # # Not added since not sure if the client can read it right now.
     # "shuffle_slots": ShuffleSlots,
@@ -48,6 +60,7 @@ el_options: Dict[str, type(Option)] = {
     # "mini_boss_incrememnts_chapter": MiniBossIncrementsChapter,
     # "shuffle_upgrades": ShuffleUpgrades,
     "starting_spirit": StartingSpirit,
+    "item_filter_behavior": ItemFilterBehavior,
 }
 
 

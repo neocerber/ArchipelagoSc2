@@ -6,7 +6,7 @@ from BaseClasses import ItemClassification, Region, Item, Location, MultiWorld
 from worlds.generic.Rules import set_rule, add_item_rule
 from typing import Any, Dict, List
 
-from .Items import items
+from .Items import items, ItemData
 from .Locations import locations
 from .Rules import get_rules
 from .Names import names as el
@@ -37,6 +37,8 @@ class EnderLiliesWorld(World):
 
     def create_items(self) -> None:
         starting_item = assign_starting_item(self.multiworld, self.player, items)
+        
+        filter_items_to_locations_number(self.multiworld, self.player, items) 
 
         for item, data in items.items():
             if item != starting_item:
@@ -95,6 +97,29 @@ class EnderLiliesWorld(World):
                 else:
                     slot_data[location.name] = f"AP.{location.address}"
         return slot_data
+
+def filter_items_to_locations_number(multiworld: MultiWorld, player: int, items):
+    val = get_option_value(multiworld, player, "item_filter_behavior")
+    if val != 2:
+        # Not sure how to differ locations with item and entrance. Using address for now...
+        nb_locations_items = len([x for x in locations if locations[x].address is not None])
+        nb_items = sum([items[x].count for x in items])
+        nb_excedant_items = nb_items - nb_locations_items
+        if nb_excedant_items > 0:
+            if val == 0:
+                discard_candidates = sorted(x for x in items if items[x].classification == ItemClassification.filler)
+            elif val == 1:
+                discard_candidates = sorted(x for x in items if (items[x].classification == ItemClassification.filler
+                                                            or items[x].classification == ItemClassification.useful))
+            for i in range(nb_excedant_items):
+                curr_candidate = multiworld.random.choice(discard_candidates)
+                if items[curr_candidate].count == 1:
+                    del items[curr_candidate] 
+                    discard_candidates.remove(curr_candidate)
+                else:
+                    items[curr_candidate] = ItemData(code=items[curr_candidate].code, 
+                                                        count=items[curr_candidate].count - 1, 
+                                                        classification=items[curr_candidate].classification)
 
 def assign_starting_item(multiworld: MultiWorld, player: int, items) -> str:
     non_local_items = multiworld.non_local_items[player].value
