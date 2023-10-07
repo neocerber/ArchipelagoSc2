@@ -4,12 +4,13 @@ import os
 from worlds.AutoWorld import World
 from BaseClasses import ItemClassification, Region, Item, Location, MultiWorld
 from worlds.generic.Rules import set_rule, add_item_rule
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from .Items import items, ItemData
 from .Locations import locations
 from .Rules import get_rules
 from .Names import names as el
+from .Options import el_options, get_option_value
 
 ENDERLILIES = "Ender Lilies"
 
@@ -24,6 +25,7 @@ class EnderLiliesWorld(World):
     Ender Lilies: QUIETUS OF THE KNIGHTS
     """
     game                = ENDERLILIES
+    option_definitions = el_options
     location_name_to_id = { name: data.address for name, data in locations.items() }
     item_name_to_id     = { name: data.code for name, data in items.items() }
 
@@ -34,11 +36,14 @@ class EnderLiliesWorld(World):
             return EnderLiliesItem(item, ItemClassification.progression, None, self.player)
 
     def create_items(self) -> None:
+        starting_item = assign_starting_item(self.multiworld, self.player, items)
+        
         filter_items_to_locations_number(self.multiworld, items) 
 
         for item, data in items.items():
-            for i in range(data.count):
-                self.multiworld.itempool.append(self.create_item(item))
+            if item != starting_item:
+                for i in range(data.count):
+                    self.multiworld.itempool.append(self.create_item(item))
 
     def create_regions(self) -> None:
         regions = {
@@ -110,3 +115,26 @@ def filter_items_to_locations_number(multiworld: MultiWorld, items):
                                                     count=items[discard_candidate].count - 1, 
                                                     classification=items[discard_candidate].classification)
 
+def assign_starting_item(multiworld: MultiWorld, player: int, items) -> str:
+    non_local_items = multiworld.non_local_items[player].value
+
+    val = get_option_value(multiworld, player, "starting_spirit")
+    if val == 0: 
+        spirit_list = ['Spirit.s5000']
+    elif val == 1: 
+        spirit_list = [x for x in list(items.keys()) if x.startswith('Spirit.s5')]
+    elif val == 2: 
+        spirit_list = [x for x in list(items.keys()) if x.startswith('Spirit.s')]
+
+    avail_spirit = sorted(item for item in spirit_list if item not in non_local_items)
+    if not avail_spirit:
+        raise Exception("At least one spirit must be local")
+
+    spirit_name = multiworld.random.choice(avail_spirit)
+
+    item = EnderLiliesItem(spirit_name, items[spirit_name].classification, 
+                           items[spirit_name].code, player)
+
+    multiworld.get_location('starting_weapon', player).place_locked_item(item)
+
+    return spirit_name 
