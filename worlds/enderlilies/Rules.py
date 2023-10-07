@@ -777,7 +777,6 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 	}
 
 	items_rules : Dict[str, ItemRule] = {
-		'starting_weapon' : lambda item : item.player == p and item.name.startswith('Spirit.'),
 	}
 
 	return (locations_rules, items_rules)
