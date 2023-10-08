@@ -766,4 +766,7 @@ locations : Dict[str, LocationData]= {
 	'Village_15_GAMEPLAY.BP_WorldTravelVolume_2'                              : LocationData(address=None, content='Map.map_village_09.2'),
 	'Village_15_GAMEPLAY.BP_WorldTravelVolume2_5'                             : LocationData(address=None, content='Map.map_fort_01.V15'),
 	'Village_16_GAMEPLAY.BP_WorldTravelVolume3'                               : LocationData(address=None, content='Map.map_village_12.16'),
+    'Benevolence'                                                             : LocationData(address=None, content='Ending_A'),
+    'Journeys_End'                                                            : LocationData(address=None, content='Ending_B'),
+    'Dawn_Prayer'                                                             : LocationData(address=None, content='Ending_C'),
 }

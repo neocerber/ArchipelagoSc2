@@ -74,7 +74,8 @@ class EnderLiliesWorld(World):
             add_item_rule(self.multiworld.get_location(name, self.player), rule)
 
         set_rule(self.multiworld.get_location(el['Start'], self.player), lambda state : True)
-        self.multiworld.completion_condition[self.player] = lambda state: state.has(el["Abyss03Left"], self.player)
+
+        self.multiworld.completion_condition[self.player] = get_victory_condition(self.multiworld, self.player)
 
     def generate_output(self, output_directory: str) -> None:
         filename = f"{self.multiworld.get_player_name(self.player)}.EnderLiliesSeed.txt"
@@ -144,3 +145,15 @@ def assign_starting_item(multiworld: MultiWorld, player: int, items) -> str:
     multiworld.get_location('starting_weapon', player).place_locked_item(item)
 
     return spirit_name 
+
+def get_victory_condition(multiworld: MultiWorld, player: int):
+    val = get_option_value(multiworld, player, "victory_condition")
+
+    if val == 0:
+        return lambda state: state.has("Ending_A", player)
+    elif val == 1:
+        return lambda state: state.has("Ending_B", player)
+    elif val == 2:
+        return lambda state: state.has("Ending_C", player)
+    elif val == 3:
+        return lambda state: state.has_any({"Ending_A", "Ending_B", "Ending_C"}, player)

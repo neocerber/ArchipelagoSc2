@@ -50,6 +50,20 @@ class ItemFilterBehavior(Choice):
     option_nothing = 2
     default = option_filler
 
+class VictoryCondition(Choice):
+    """Defines the victory condition for this world.
+
+    ending_a: Acheving ending A trigger a victory. 
+    ending_b: Acheving ending B trigger a victory.
+    ending_c: Acheving ending C trigger a victory.
+    any_ending: Acheving any ending trigger a victory."""
+    display_name = "Victory condition"
+    option_ending_a = 0
+    option_ending_b = 1
+    option_ending_c = 2
+    option_any_ending = 3
+    default = option_ending_c    
+
 el_options: Dict[str, type(Option)] = {
     # # Not added since not sure if the client can read it right now.
     # "shuffle_slots": ShuffleSlots,
@@ -61,6 +75,7 @@ el_options: Dict[str, type(Option)] = {
     # "shuffle_upgrades": ShuffleUpgrades,
     "starting_spirit": StartingSpirit,
     "item_filter_behavior": ItemFilterBehavior,
+    "victory_condition": VictoryCondition,
 }
 
 
