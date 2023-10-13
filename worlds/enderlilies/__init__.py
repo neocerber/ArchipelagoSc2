@@ -48,9 +48,8 @@ class EnderLiliesWorld(World):
         for location, data in locations.items():
             check = EnderLiliesLocation(self.player, location, data.address, regions["Game"])
             if not data.address:
-                check.show_in_spoiler = False
-                check.event = True
                 check.place_locked_item(self.create_item(data.content))
+                check.show_in_spoiler = False
             regions["Game"].locations.append(check)
 
 
@@ -90,3 +89,9 @@ class EnderLiliesWorld(World):
                 else:
                     slot_data[location.name] = f"AP.{location.address}"
         return slot_data
+    
+    def get_name_string_for_object(self, obj) -> str:
+        name = obj.name
+        if name in el:
+            name = el[name]
+        return name if self.players == 1 else f'{name} ({self.get_player_name(obj.player)})'
