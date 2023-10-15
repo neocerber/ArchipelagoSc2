@@ -139,7 +139,7 @@ class StartingLocation(Choice):
     option_lab1 = 145
     option_lab2 = 150
 
-    default = option_covenhalls
+    default = option_start
     id_to_name = {
         0: "Start",
         3: "Cellar",
@@ -177,10 +177,10 @@ class StartingLocation(Choice):
 @option("item_pool_priority")
 class ItemPoolPriority(Choice):
     """Defines what items will be kept in the pool when there are more items than locations left
-    option_useful: Give priority to useful items over filler (Findings).
-    option_any: Priority is the same for any non-progression items.
-    option_all: Leave all items in the pool and let Archipelago pick
-    default: option_useful."""
+    Useful: Give priority to useful items over filler (Findings).
+    Any: Priority is the same for any non-progression items.
+    All: Leave all items in the pool and let Archipelago pick
+    default: Useful."""
 
     display_name = "Prioritize Useful Items"
     option_any = 0
@@ -205,10 +205,10 @@ class ItemPoolPriority(Choice):
 @option("goal")
 class Goal(Choice):
     """Goal to complete for Archipelago
-    ending_a: Ending A - Benevolence.
-    ending_b: Ending B - Journey's End.
-    ending_c: Ending C - Dawn Prayer.
-    any_ending: Achieving any Ending.
+    Ending A - Benevolence.
+    Ending B - Journey's End.
+    Ending C - Dawn Prayer.
+    Any Ending: Achieving any Ending.
     default: Ending C"""
 
     display_name = "Goal"
