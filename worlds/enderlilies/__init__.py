@@ -1,84 +1,101 @@
 import json
 import os
+from Utils import get_default_options
 
 from worlds.AutoWorld import World
-from BaseClasses import ItemClassification, Region, Item, Location, MultiWorld
-from worlds.generic.Rules import set_rule, add_item_rule
-from typing import Any, Dict, List
+from BaseClasses import ItemClassification, Region, Item, Location, MultiWorld, Type
+from worlds.generic.Rules import add_rule, set_rule, add_item_rule
+from typing import Any, Dict, FrozenSet, List, Union
+from Options import Option
 
 from .Items import items, ItemData
 from .Locations import locations
 from .Rules import get_rules
 from .Names import names as el
-from .Options import el_options, get_option_value
+from .Options import options, StartingSpirit, StartingLocation, ItemPoolPriority, Goal
 
 ENDERLILIES = "Ender Lilies"
+
 
 class EnderLiliesItem(Item):
     game = ENDERLILIES
 
+
 class EnderLiliesLocation(Location):
     game = ENDERLILIES
+
 
 class EnderLiliesWorld(World):
     """
     Ender Lilies: QUIETUS OF THE KNIGHTS
     """
-    game                = ENDERLILIES
-    option_definitions = el_options
-    location_name_to_id = { name: data.address for name, data in locations.items() }
-    item_name_to_id     = { name: data.code for name, data in items.items() }
+
+    game = ENDERLILIES
+    option_definitions = {option_class.name: option_class for option_class in options}
+    location_name_to_id = {name: data.address for name, data in locations.items()}
+    item_name_to_id = {name: data.code for name, data in items.items()}
 
     def create_item(self, item: str) -> EnderLiliesItem:
         if item in self.item_name_to_id:
-            return EnderLiliesItem(item, items[item].classification, items[item].code, self.player)
+            return EnderLiliesItem(
+                item, items[item].classification, items[item].code, self.player
+            )
         else:
-            return EnderLiliesItem(item, ItemClassification.progression, None, self.player)
+            return EnderLiliesItem(
+                item, ItemClassification.progression, None, self.player
+            )
 
     def create_items(self) -> None:
-        starting_item = assign_starting_item(self.multiworld, self.player, items)
-        
-        filter_items_to_locations_number(self.multiworld, self.player, items) 
-
+        starting_items = self.assign_starting_items()
+        pool = []
         for item, data in items.items():
-            if item != starting_item:
-                for i in range(data.count):
-                    self.multiworld.itempool.append(self.create_item(item))
+            if item in starting_items:
+                continue
+            for i in range(data.count):
+                pool.append(self.create_item(item))
+        unfilled_location = self.multiworld.get_unfilled_locations(self.player)
+        self.multiworld.random.shuffle(pool)
+        pool = self.get_option(ItemPoolPriority).sort_items_list(pool, len(unfilled_location))
+
+        self.multiworld.itempool.extend(pool)
 
     def create_regions(self) -> None:
         regions = {
-            'Menu' : Region('Menu', self.player, self.multiworld),
-            'Game' : Region('Game', self.player, self.multiworld),
-        }        
+            "Menu": Region("Menu", self.player, self.multiworld),
+            "Game": Region("Game", self.player, self.multiworld),
+        }
         self.multiworld.regions.extend(regions.values())
+        victory = self.get_option(Goal).get_victory_locations()
         regions["Menu"].connect(regions["Game"])
         for location, data in locations.items():
-            check = EnderLiliesLocation(self.player, location, data.address, regions["Game"])
+            check = EnderLiliesLocation(self.player, location, data.address, regions["Game"]
+            )
             if not data.address:
                 check.show_in_spoiler = False
-                check.event = True
-                check.place_locked_item(self.create_item(data.content))
+                if location in victory:
+                    check.place_locked_item(self.create_item("Victory"))
+                else:
+                    check.place_locked_item(self.create_item(data.content))
             regions["Game"].locations.append(check)
-
 
     def set_rules(self) -> None:
         locations_rules, items_rules = get_rules(self.player)
-        player = self.player        
-
-        can_contain_map = lambda item : item.player == player and item.name.startswith('Map.')
-        cannot_contain_map = lambda item : item.name.startswith('Map.') == False
 
         for name, rule in locations_rules.items():
             set_rule(self.multiworld.get_location(name, self.player), rule)
         for name, rule in items_rules.items():
             add_item_rule(self.multiworld.get_location(name, self.player), rule)
 
-        set_rule(self.multiworld.get_location(el['Start'], self.player), lambda state : True)
-        self.multiworld.completion_condition[self.player] = lambda state: state.has(el["Abyss03Left"], self.player)
+        starting_location = self.get_option(StartingLocation).get_starting_location()
+        set_rule(self.multiworld.get_location(starting_location, self.player), lambda s : True)
+
+        self.multiworld.completion_condition[self.player] = lambda state: state.has(
+            "Victory", self.player
+        )
 
     def generate_output(self, output_directory: str) -> None:
         filename = f"{self.multiworld.get_player_name(self.player)}.EnderLiliesSeed.txt"
-        with open(os.path.join(output_directory, filename), 'w') as f:
+        with open(os.path.join(output_directory, filename), "w") as f:
             print(f"SEED:{self.multiworld.seed}", file=f)
             for location in self.multiworld.get_locations(self.player):
                 if location.show_in_spoiler:
@@ -88,8 +105,12 @@ class EnderLiliesWorld(World):
                         print(f"{location.name}:AP.{location.address}", file=f)
 
     def fill_slot_data(self) -> Dict[str, Any]:
+        # Content that will be send to the game
         slot_data: Dict[str, Any] = {}
+        slot_data['SETTINGS:victory'] = self.get_option(Goal).get_victory_locations();
+
         slot_data["SEED"] = str(self.multiworld.seed)
+        slot_data["SETTINGS:starting_room"] = str(self.get_option(StartingLocation).value)
         for location in self.multiworld.get_locations(self.player):
             if location.show_in_spoiler:
                 if location.item.player == self.player:
@@ -98,49 +119,21 @@ class EnderLiliesWorld(World):
                     slot_data[location.name] = f"AP.{location.address}"
         return slot_data
 
-def filter_items_to_locations_number(multiworld: MultiWorld, player: int, items):
-    val = get_option_value(multiworld, player, "item_filter_behavior")
-    if val != 2:
-        # Not sure how to differ locations with item and entrance. Using address for now...
-        nb_locations_items = len([x for x in locations if locations[x].address is not None])
-        nb_items = sum([items[x].count for x in items])
-        nb_excedant_items = nb_items - nb_locations_items
-        if nb_excedant_items > 0:
-            if val == 0:
-                discard_candidates = sorted(x for x in items if items[x].classification == ItemClassification.filler)
-            elif val == 1:
-                discard_candidates = sorted(x for x in items if (items[x].classification == ItemClassification.filler
-                                                            or items[x].classification == ItemClassification.useful))
-            for i in range(nb_excedant_items):
-                curr_candidate = multiworld.random.choice(discard_candidates)
-                if items[curr_candidate].count == 1:
-                    del items[curr_candidate] 
-                    discard_candidates.remove(curr_candidate)
-                else:
-                    items[curr_candidate] = ItemData(code=items[curr_candidate].code, 
-                                                        count=items[curr_candidate].count - 1, 
-                                                        classification=items[curr_candidate].classification)
+    def get_option(self, option: Union[str, Type[Option]]) -> Option:
+        if self.multiworld is None:
+            return option.default
+        if isinstance(option, str):
+            return self.multiworld.__getattribute__(option)[self.player]
+        return self.multiworld.__getattribute__(option.name)[self.player]
 
-def assign_starting_item(multiworld: MultiWorld, player: int, items) -> str:
-    non_local_items = multiworld.non_local_items[player].value
+    def get_filler_item_name(self) -> str:
+        return "nothing"
 
-    val = get_option_value(multiworld, player, "starting_spirit")
-    if val == 0: 
-        spirit_list = ['Spirit.s5000']
-    elif val == 1: 
-        spirit_list = [x for x in list(items.keys()) if x.startswith('Spirit.s5')]
-    elif val == 2: 
-        spirit_list = [x for x in list(items.keys()) if x.startswith('Spirit.s')]
+    def assign_starting_items(self) -> List[str]:
+        weapon_name = self.get_option(StartingSpirit).get_starting_weapon_pool()
+        if isinstance(weapon_name, list):
+            weapon_name = self.multiworld.random.choice(weapon_name)
+        starting_weapon = self.create_item(weapon_name)        
+        self.multiworld.get_location("starting_weapon", self.player).place_locked_item(starting_weapon)
 
-    avail_spirit = sorted(item for item in spirit_list if item not in non_local_items)
-    if not avail_spirit:
-        raise Exception("At least one spirit must be local")
-
-    spirit_name = multiworld.random.choice(avail_spirit)
-
-    item = EnderLiliesItem(spirit_name, items[spirit_name].classification, 
-                           items[spirit_name].code, player)
-
-    multiworld.get_location('starting_weapon', player).place_locked_item(item)
-
-    return spirit_name 
+        return [weapon_name]
