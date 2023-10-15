@@ -774,9 +774,13 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		'Village_16_GAMEPLAY.BP_Interactable_Passives_Treasure_2'                 : lambda s : s.has(el['Village16Right'], p),
 		'Village_16_GAMEPLAY.BP_WorldTravelVolume3'                               : lambda s : s.has(el['Village16Right'], p),
 		'starting_weapon'                                                         : lambda s : True,
+		'Ending_A'                                                                : lambda s : s.has(el['Outside02Left'], p),
+		'Ending_B'                                                                : lambda s : s.has(el['Abyss03Left'], p),
+		'Ending_C'                                                                : lambda s : s.has(el['Abyss03Left'], p) and (s.count("Generic.i_FinalPassivePart_Up", p) == 7),
 	}
 
 	items_rules : Dict[str, ItemRule] = {
+		'starting_weapon'                                                         : lambda i : i.player == p and i.name.startswith('Spirit.'),
 	}
 
 	return (locations_rules, items_rules)
