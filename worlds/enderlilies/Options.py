@@ -50,6 +50,20 @@ class ItemFilterBehavior(Choice):
     option_nothing = 2
     default = option_filler
 
+class EarlyManeuver(Choice):
+    """Defines if a maneuver item, i.e. double jump, Silva, Champion or claw, should be placed early. 
+    Without a maneuver item, only nine checks are available at the start.
+    This option only work when the starting position is vanilla and without room randomizer. 
+
+    local: Ensure that a maneuver item is in sphere 0 of the EL player.
+    global: Ensure that a maneuver item is in sphere 0 of any player in the multiworld.
+    none: Do nothing.  """
+    display_name = "Force early maneuver item"
+    option_none = 0
+    option_local = 1
+    option_global = 2
+    default = option_local
+
 el_options: Dict[str, type(Option)] = {
     # # Not added since not sure if the client can read it right now.
     # "shuffle_slots": ShuffleSlots,
@@ -61,6 +75,7 @@ el_options: Dict[str, type(Option)] = {
     # "shuffle_upgrades": ShuffleUpgrades,
     "starting_spirit": StartingSpirit,
     "item_filter_behavior": ItemFilterBehavior,
+    "early_maneuver": EarlyManeuver,
 }
 
 
