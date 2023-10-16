@@ -125,16 +125,20 @@ with open(rules_path, "w") as rules_py:
     print("\tmacros : Dict[str, CollectionRule] = {", file=rules_py)
     for macro, rule in macros.items():
         py_rule = rule_to_py(rule)
+        print(f"#\t\t{''.ljust(maxlen)}    {rule}" ,file=rules_py)
         print(f"\t\t'{macro}'{''.ljust(maxlen - len(macro))} : lambda s : {py_rule}," ,file=rules_py)
     print("\t}\n", file=rules_py)
 
     maxlen = len(max(data["nodes"].keys(), key=len))
     print("\tlocations_rules : Dict[str, CollectionRule] = {", file=rules_py)
     for node_name, node in data["nodes"].items():
+        rule = "True"
         if 'rules' in node:
             py_rule = rule_to_py(node['rules'])
+            rule = node['rules']
         else:
             py_rule = "True"
+        print(f"#\t\t{''.ljust(maxlen)}    {rule}" ,file=rules_py)
         print(f"\t\t'{node_name}'{''.ljust(maxlen - len(node_name))} : lambda s : {py_rule}," ,file=rules_py)
     print("\t}\n", file=rules_py)
 
@@ -143,39 +147,39 @@ with open(rules_path, "w") as rules_py:
     print("\t}\n", file=rules_py)
     
     print("\treturn (locations_rules, items_rules)", file=rules_py)
-
-with open(items_path, "w") as items_py:
-    print("from typing import Optional, NamedTuple, Dict", file=items_py)
-    print("from BaseClasses import ItemClassification as IC\n", file=items_py)
-    print("class ItemData(NamedTuple):\n\
-    code: Optional[int]\n\
-    count: Optional[int]\n\
-    classification: IC\n", file=items_py)
-    print("items : Dict[str, ItemData]= {", file=items_py)
-    keys : List[str] = list(items.keys())
-    keys.sort()
-    code = 0x7171E5
-    maxlen = len(max(keys, key=len))
-    for item in keys:
-        print(f"\t'{item}'{''.ljust(maxlen - len(item))} : ItemData(code={code:#0{4}x}, count={str(items[item][0]).ljust(2)}, classification=IC.{items[item][1]}),", file=items_py)
-        code += 1
-    print("}\n", file=items_py)
-
-with open(locations_path, "w") as locations_py:
-    print("from typing import Optional, NamedTuple, Dict\n", file=locations_py)
-
-    print("class LocationData(NamedTuple):\n\
-    address: Optional[int]\n\
-    content: str\n", file=locations_py)
-    
-    address = 0x7171E5
-    maxlen = max(len(max(locations.keys(), key=len)),
-                 len(max(events.keys(), key=len)))
-    print("locations : Dict[str, LocationData]= {", file=locations_py)
-    for node_name, node in locations.items():
-        print(f"\t'{node_name}'{''.ljust(maxlen - len(node_name))} : LocationData(address={address:#0{5}x}, content='{node['content']}'),", file=locations_py)
-        address += 1
-    print("\n# entrances and events\n", file=locations_py)
-    for node_name, content in events.items():
-        print(f"\t'{node_name}'{''.ljust(maxlen - len(node_name))} : LocationData(address=None, content='{content}'),", file=locations_py)
-    print("}", file=locations_py)
+#
+#with open(items_path, "w") as items_py:
+#    print("from typing import Optional, NamedTuple, Dict", file=items_py)
+#    print("from BaseClasses import ItemClassification as IC\n", file=items_py)
+#    print("class ItemData(NamedTuple):\n\
+#    code: Optional[int]\n\
+#    count: Optional[int]\n\
+#    classification: IC\n", file=items_py)
+#    print("items : Dict[str, ItemData]= {", file=items_py)
+#    keys : List[str] = list(items.keys())
+#    keys.sort()
+#    code = 0x7171E5
+#    maxlen = len(max(keys, key=len))
+#    for item in keys:
+#        print(f"\t'{item}'{''.ljust(maxlen - len(item))} : ItemData(code={code:#0{4}x}, count={str(items[item][0]).ljust(2)}, classification=IC.{items[item][1]}),", file=items_py)
+#        code += 1
+#    print("}\n", file=items_py)
+#
+#with open(locations_path, "w") as locations_py:
+#    print("from typing import Optional, NamedTuple, Dict\n", file=locations_py)
+#
+#    print("class LocationData(NamedTuple):\n\
+#    address: Optional[int]\n\
+#    content: str\n", file=locations_py)
+#    
+#    address = 0x7171E5
+#    maxlen = max(len(max(locations.keys(), key=len)),
+#                 len(max(events.keys(), key=len)))
+#    print("locations : Dict[str, LocationData]= {", file=locations_py)
+#    for node_name, node in locations.items():
+#        print(f"\t'{node_name}'{''.ljust(maxlen - len(node_name))} : LocationData(address={address:#0{5}x}, content='{node['content']}'),", file=locations_py)
+#        address += 1
+#    print("\n# entrances and events\n", file=locations_py)
+#    for node_name, content in events.items():
+#        print(f"\t'{node_name}'{''.ljust(maxlen - len(node_name))} : LocationData(address=None, content='{content}'),", file=locations_py)
+#    print("}", file=locations_py)
