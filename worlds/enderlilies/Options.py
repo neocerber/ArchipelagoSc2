@@ -2,7 +2,7 @@ from worlds.AutoWorld import World
 from BaseClasses import Item
 from operator import index
 from typing import Any, Dict, Type, List, Union, FrozenSet
-from Options import Choice, Option, DefaultOnToggle
+from Options import Choice, Option, DefaultOnToggle, Toggle, Range
 from .Names import names as el
 
 
@@ -229,9 +229,78 @@ class Goal(Choice):
             return ["Ending_A", "Ending_B", "Ending_C"]
 
 
+        
+@option("shuffle_slots")
+class ShuffleRelicsCosts(Toggle):
+    """Shuffle the how many slots you need to equip each relics
+    default: Off"""
+
+    display_name = "Shuffle relics costs"
+
+@option("minibosses_chapter")
+class SubSpiritsIncreaseChapter(Toggle):
+    """Increase the game difficulty whenever you defeat a Sub Spirit in Addition to Main Bosses
+    default: Off"""
+
+    display_name = "Sub-spirits increase chapter"
+
+@option("NG+")
+class NewGamePlusAI(Toggle):
+    """Use NG+ AI for enemies with new patterns behaviours
+    default: Off"""
+
+    display_name = "NG+ AI"
+
+@option("shuffle_upgrades")
+class ShuffleSpiritsUpgrades(Toggle):
+    """Shuffle what currency is required to upgrade each weapon
+    default: Off"""
+
+    display_name = "Shuffle spirits upgrades"
+
+@option("force_ancient_souls")
+class StartingWeaponUsesAncientSouls(Toggle):
+    """Upgrading your starting spirit will require ancient souls
+    default: Off"""
+
+    display_name = "Starter uses ancient souls"
+
+@option("shuffle_bgm")
+class ShuffleBGM(Toggle):
+    """Each room will have a random music from the BGM list
+    default: Off"""
+
+    display_name = "Random background music"
+
+@option("start_chapter")
+class ChapterMin(Range):
+    """Defines starting chapter difficulty
+    default: 1"""
+    range_start = 1
+    range_end = 10
+    default = 1
+    display_name = "Starting chapter"
+
+@option("max_chapter")
+class ChapterMax(Range):
+    """Defines max chapter difficulty that you can reach during gameplay
+    default: 10"""
+    range_start = 1
+    range_end = 10
+    default = 10
+    display_name = "Max chapter"
+
 options: Type[Option] = [
     StartingSpirit,
     StartingLocation,
     ItemPoolPriority,
     Goal,
+    ShuffleRelicsCosts,
+    SubSpiritsIncreaseChapter,
+    NewGamePlusAI,
+    ShuffleSpiritsUpgrades,
+    StartingWeaponUsesAncientSouls,
+    ChapterMin,
+    ChapterMax,
+    ShuffleBGM,
 ]

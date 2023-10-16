@@ -166,8 +166,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		'Castle_11_GAMEPLAY.BP_WorldTravelVolume_2'                               : lambda s : s.has(el['Castle11Right'], p) or s.has(el['Castle11Bottom2'], p),
 #		                                                                           Castle11Left | Castle11Bottom1
 		'Castle_11_GAMEPLAY.BP_WorldTravelVolume2'                                : lambda s : s.has(el['Castle11Left'], p) or s.has(el['Castle11Bottom1'], p),
-#		                                                                           Castle11Top | Castle11Left + Castle11Right
-		'Castle_11_GAMEPLAY.BP_WorldTravelVolume3'                                : lambda s : s.has(el['Castle11Top'], p) or s.has(el['Castle11Left'], p) and s.has(el['Castle11Right'], p),
+#		                                                                           Castle11Top | Castle11Left + Castle11Right + LEDGE
+		'Castle_11_GAMEPLAY.BP_WorldTravelVolume3'                                : lambda s : s.has(el['Castle11Top'], p) or s.has(el['Castle11Left'], p) and s.has(el['Castle11Right'], p) and macros['LEDGE'](s),
 #		                                                                           Castle11Bottom1 | Castle11Left
 		'Castle_11_GAMEPLAY.BP_WorldTravelVolume4'                                : lambda s : s.has(el['Castle11Bottom1'], p) or s.has(el['Castle11Left'], p),
 #		                                                                           Castle11Bottom2 | Castle11Right
@@ -1538,13 +1538,12 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		'Village_16_GAMEPLAY.BP_Interactable_Passives_Treasure_2'                 : lambda s : s.has(el['Village16Right'], p),
 #		                                                                           Village16Right
 		'Village_16_GAMEPLAY.BP_WorldTravelVolume3'                               : lambda s : s.has(el['Village16Right'], p),
-
+#		                                                                           True
 		'starting_weapon'                                                         : lambda s : True,
 		'Ending_A'                                                                : lambda s : s.has(el['Outside02Left'], p),
 		'Ending_B'                                                                : lambda s : s.has(el['Abyss03Left'], p),
 		'Ending_C'                                                                : lambda s : s.has(el['Abyss03Left'], p) and (s.count("Generic.i_FinalPassivePart_Up", p) == 7),
-
-	}
+}
 
 	items_rules : Dict[str, ItemRule] = {
 		'starting_weapon' : lambda item : item.player == p and item.name.startswith('Spirit.'),
