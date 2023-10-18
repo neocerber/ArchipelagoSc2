@@ -1,18 +1,16 @@
 import json
 import os
-from Utils import get_default_options
 
 from worlds.AutoWorld import World
-from BaseClasses import ItemClassification, Region, Item, Location, MultiWorld, Type
-from worlds.generic.Rules import add_rule, set_rule, add_item_rule
-from typing import Any, Dict, FrozenSet, List, Union
+from BaseClasses import ItemClassification, Region, Item, Location, Type
+from worlds.generic.Rules import set_rule, add_item_rule
+from typing import Any, Dict, List, Union
 from Options import Option
 
-from .Items import items, ItemData
+from .Items import items
 from .Locations import locations
 from .Rules import get_rules
-from .Names import names as el
-from .Options import options, StartingSpirit, StartingLocation, ItemPoolPriority, Goal, EarlyManeuver
+from .Options import *
 
 ENDERLILIES = "Ender Lilies"
 
@@ -123,8 +121,26 @@ class EnderLiliesWorld(World):
         # Content that will be send to the game
         slot_data: Dict[str, Any] = {}
         slot_data['SETTINGS:victory'] = self.get_option(Goal).get_victory_locations();
-
         slot_data["SEED"] = str(self.multiworld.seed)
+        
+        if self.get_option(ShuffleRelicsCosts):
+            slot_data[f'SETTINGS:{ShuffleRelicsCosts.name}'] = None;
+        if self.get_option(SubSpiritsIncreaseChapter):
+            slot_data[f'SETTINGS:{SubSpiritsIncreaseChapter.name}'] = None;
+        if self.get_option(NewGamePlusAI):
+            slot_data[f'SETTINGS:{NewGamePlusAI.name}'] = None;
+        if self.get_option(ShuffleSpiritsUpgrades):
+            slot_data[f'SETTINGS:{ShuffleSpiritsUpgrades.name}'] = None;
+        if self.get_option(StartingWeaponUsesAncientSouls):
+            slot_data[f'SETTINGS:{StartingWeaponUsesAncientSouls.name}'] = None;
+        if self.get_option(ShuffleBGM):
+            slot_data[f'SETTINGS:{ShuffleBGM.name}'] = None;
+        
+        if self.get_option(ChapterMin).value != ChapterMin.default:
+            slot_data[f'SETTINGS:{ChapterMin.name}'] = str(self.get_option(ChapterMin).value);
+        if self.get_option(ChapterMax).value != ChapterMax.default:
+            slot_data[f'SETTINGS:{ChapterMax.name}'] = str(self.get_option(ChapterMax).value);
+
         slot_data["SETTINGS:starting_room"] = str(self.get_option(StartingLocation).value)
         for location in self.multiworld.get_locations(self.player):
             if location.show_in_spoiler:

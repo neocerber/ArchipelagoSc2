@@ -1349,7 +1349,7 @@
     },
     "Castle_11_GAMEPLAY.BP_WorldTravelVolume3": {
       "content": "Map.map_castle_13.11",
-      "rules": "Castle11Top | Castle11Left + Castle11Right"
+      "rules": "Castle11Top | Castle11Left + Castle11Right + LEDGE"
     },
     "Castle_11_GAMEPLAY.BP_WorldTravelVolume4": {
       "content": "Map.map_castle_03.11A",
