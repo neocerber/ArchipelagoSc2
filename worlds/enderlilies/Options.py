@@ -241,7 +241,7 @@ class EarlyManeuver(Choice):
     option_none = 0
     option_local = 1
     option_global = 2
-    default = option_local
+    default = option_none
 
 
 options: Type[Option] = [
