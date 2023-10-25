@@ -1,26 +1,40 @@
 import json
 import os
+from tkinter import SEL
+from Utils import get_default_options
 
 from worlds.AutoWorld import World
 from BaseClasses import ItemClassification, Region, Item, Location, Type
 from worlds.generic.Rules import set_rule, add_item_rule
-from typing import Any, Dict, List, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 from Options import Option
+from Fill import swap_location_item
 
-from .Items import items
-from .Locations import locations
+from .Items import ItemData, items
+from .Locations import LocationData, locations
 from .Rules import get_rules
 from .Options import *
 
 ENDERLILIES = "Ender Lilies"
 
+class EnderLiliesEvent(Item):
+    game = ENDERLILIES
 
 class EnderLiliesItem(Item):
     game = ENDERLILIES
+    data : ItemData
 
+    def __init__(self, name: str, data : ItemData, player: int):
+        super().__init__(name, data.classification, data.code, player)
+        self.data = data
 
 class EnderLiliesLocation(Location):
     game = ENDERLILIES
+    data : LocationData
+
+    def __init__(self, player: int, name: str, data : LocationData, parent: Optional[Region] = None):
+        super().__init__(player, name, data.address, parent)
+        self.data = data
 
 
 class EnderLiliesWorld(World):
@@ -29,31 +43,35 @@ class EnderLiliesWorld(World):
     """
 
     game = ENDERLILIES
-    option_definitions = {option_class.name: option_class for option_class in options}
+    option_definitions = options
     location_name_to_id = {name: data.address for name, data in locations.items()}
     item_name_to_id = {name: data.code for name, data in items.items()}
 
     def create_item(self, item: str) -> EnderLiliesItem:
         if item in self.item_name_to_id:
-            return EnderLiliesItem(
-                item, items[item].classification, items[item].code, self.player
-            )
+            item_object = EnderLiliesItem(item, items[item], self.player)
         else:
-            return EnderLiliesItem(
-                item, ItemClassification.progression, None, self.player
-            )
+            item_object = EnderLiliesEvent(item, ItemClassification.progression, None, self.player)
+        return item_object
 
     def create_items(self) -> None:
         starting_items = self.assign_starting_items()
+
         pool = []
         for item, data in items.items():
-            if item in starting_items:
+            if item in starting_items or data.unused and not self.get_option(AddUnusedItems):
                 continue
             for i in range(data.count):
                 pool.append(self.create_item(item))
         unfilled_location = self.multiworld.get_unfilled_locations(self.player)
         self.multiworld.random.shuffle(pool)
-        pool = self.get_option(ItemPoolPriority).sort_items_list(pool, len(unfilled_location))
+        pool : List[EnderLiliesItem] = self.get_option(ItemPoolPriority).sort_items_list(pool, len(unfilled_location))
+
+        if self.get_option(StoneTabletsPlacement).value == StoneTabletsPlacement.option_region:
+            self.multiworld.local_items[self.player].value.add("Stone Tablet Fragment")
+            for item in pool:
+                if item.name == 'Stone Tablet Fragment':
+                    item.classification = ItemClassification.progression_skip_balancing
 
         self.multiworld.itempool.extend(pool)
 
@@ -66,8 +84,7 @@ class EnderLiliesWorld(World):
         victory = self.get_option(Goal).get_victory_locations()
         regions["Menu"].connect(regions["Game"])
         for location, data in locations.items():
-            check = EnderLiliesLocation(self.player, location, data.address, regions["Game"]
-            )
+            check = EnderLiliesLocation(self.player, location, data, regions["Game"])
             if not data.address:
                 check.show_in_spoiler = False
                 if location in victory:
@@ -75,6 +92,17 @@ class EnderLiliesWorld(World):
                 else:
                     check.place_locked_item(self.create_item(data.content))
             regions["Game"].locations.append(check)
+
+    def post_fill(self) -> None:
+        if self.get_option(StoneTabletsPlacement) == StoneTabletsPlacement.option_region:
+            tablets_locations : List[Location]  = self.multiworld.find_item_locations(el["tablet"], self.player)
+            tablet : EnderLiliesItem = tablets_locations[0].item
+            valid_locations : List[Location]  = [location for location in self.multiworld.get_locations(self.player) if not location.locked and location.can_fill(self.multiworld.state, tablet) and location.item == None or not location.item.advancement]
+            self.multiworld.random.shuffle(valid_locations)
+            swaps : List[Tuple[Location, Location]] = StoneTabletsPlacement.place_tablets_in_regions(tablets_locations, valid_locations)
+            for swap in swaps:
+                swap_location_item(swap[0], swap[1], True)
+        return super().post_fill()
 
     def set_rules(self) -> None:
         locations_rules, items_rules = get_rules(self.player)
@@ -91,48 +119,41 @@ class EnderLiliesWorld(World):
             "Victory", self.player
         )
 
-    def generate_output(self, output_directory: str) -> None:
-        filename = f"{self.multiworld.get_player_name(self.player)}.EnderLiliesSeed.txt"
-        with open(os.path.join(output_directory, filename), "w") as f:
-            print(f"SEED:{self.multiworld.seed}", file=f)
-            for location in self.multiworld.get_locations(self.player):
-                if location.show_in_spoiler:
-                    if location.item.player == self.player:
-                        print(f"{location.name}:{location.item.name}", file=f)
-                    else:
-                        print(f"{location.name}:AP.{location.address}", file=f)
-
     def fill_slot_data(self) -> Dict[str, Any]:
         # Content that will be send to the game
         slot_data: Dict[str, Any] = {}
-        slot_data['SETTINGS:victory'] = self.get_option(Goal).get_victory_locations();
+
+        # Data for LiveSplit
+        slot_data['AP.victory'] = self.get_option(Goal).get_victory_locations()
+        slot_data['AP.key_to_address'] = {data.key: data.address  for _, data in locations.items() if data.address and data.key}
+        slot_data['AP.key_to_code'] = {data.key: data.code for _, data in items.items() if data.code and data.key}
+
+        # Data that will be in the seed file
         slot_data["SEED"] = str(self.multiworld.seed)
-        
         if self.get_option(ShuffleRelicsCosts):
-            slot_data[f'SETTINGS:{ShuffleRelicsCosts.name}'] = None;
+            slot_data[f'SETTINGS:{ShuffleRelicsCosts.name}'] = None
         if self.get_option(SubSpiritsIncreaseChapter):
-            slot_data[f'SETTINGS:{SubSpiritsIncreaseChapter.name}'] = None;
+            slot_data[f'SETTINGS:{SubSpiritsIncreaseChapter.name}'] = None
         if self.get_option(NewGamePlusAI):
-            slot_data[f'SETTINGS:{NewGamePlusAI.name}'] = None;
+            slot_data[f'SETTINGS:NG+'] = None
         if self.get_option(ShuffleSpiritsUpgrades):
-            slot_data[f'SETTINGS:{ShuffleSpiritsUpgrades.name}'] = None;
+            slot_data[f'SETTINGS:{ShuffleSpiritsUpgrades.name}'] = None
         if self.get_option(StartingWeaponUsesAncientSouls):
-            slot_data[f'SETTINGS:{StartingWeaponUsesAncientSouls.name}'] = None;
+            slot_data[f'SETTINGS:{StartingWeaponUsesAncientSouls.name}'] = None
         if self.get_option(ShuffleBGM):
-            slot_data[f'SETTINGS:{ShuffleBGM.name}'] = None;
-        
+            slot_data[f'SETTINGS:{ShuffleBGM.name}'] = None
         if self.get_option(ChapterMin).value != ChapterMin.default:
-            slot_data[f'SETTINGS:{ChapterMin.name}'] = str(self.get_option(ChapterMin).value);
+            slot_data[f'SETTINGS:{ChapterMin.name}'] = str(self.get_option(ChapterMin).value)
         if self.get_option(ChapterMax).value != ChapterMax.default:
-            slot_data[f'SETTINGS:{ChapterMax.name}'] = str(self.get_option(ChapterMax).value);
+            slot_data[f'SETTINGS:{ChapterMax.name}'] = str(self.get_option(ChapterMax).value)
 
         slot_data["SETTINGS:starting_room"] = str(self.get_option(StartingLocation).value)
         for location in self.multiworld.get_locations(self.player):
             if location.show_in_spoiler:
                 if location.item.player == self.player:
-                    slot_data[location.name] = f"{location.item.name}"
+                    slot_data[location.data.key] = f"{location.item.data.key}"
                 else:
-                    slot_data[location.name] = f"AP.{location.address}"
+                    slot_data[location.data.key] = f"AP.{self.multiworld.player_name[location.item.player]}|{location.item.game}|{location.item.name}"
         return slot_data
 
     def get_option(self, option: Union[str, Type[Option]]) -> Option:
@@ -149,7 +170,6 @@ class EnderLiliesWorld(World):
         weapon_name = self.get_option(StartingSpirit).get_starting_weapon_pool()
         if isinstance(weapon_name, list):
             weapon_name = self.multiworld.random.choice(weapon_name)
-        starting_weapon = self.create_item(weapon_name)        
-        self.multiworld.get_location("starting_weapon", self.player).place_locked_item(starting_weapon)
-
+        starting_weapon = self.create_item(weapon_name)
+        self.multiworld.get_location("Starting Spirit", self.player).place_locked_item(starting_weapon)
         return [weapon_name]

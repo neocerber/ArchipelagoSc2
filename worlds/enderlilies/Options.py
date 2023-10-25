@@ -1,12 +1,17 @@
+from functools import total_ordering
 from worlds.AutoWorld import World
-from BaseClasses import Item
+from BaseClasses import Item, ItemClassification, Location, Dict
 from operator import index
-from typing import Any, Dict, Type, List, Union, FrozenSet
+from typing import Any, Callable, Dict, Tuple, Type, List, Union, FrozenSet
 from Options import Choice, Option, DefaultOnToggle, Toggle, Range
 from .Names import names as el
+from .Items import items
 
+options: Dict[str, Option] = {}
 
+# decorator to autofill options
 def option(name: str):
+
     @classmethod
     def get_option(cls, world: World) -> Option:
         return getattr(world.multiworld, cls.name)[world.player]
@@ -14,6 +19,7 @@ def option(name: str):
     def decorator(cls: Type[Option]) -> Type[Option]:
         cls.name = name
         cls.get_option = get_option
+        options[name] = cls
         return cls
 
     return decorator
@@ -58,36 +64,37 @@ class StartingSpirit(Choice):
     option_fellwyrm = 25
 
     spirits = [
-        el["umbral"],
-        el["gerrod"],
-        el["silva"],
-        el["julius"],
-        el["ulv"],
-        el["eleine"],
-        el["hoenir"],
-        el["faden"],
-        el["siegrid"],
-        el["youth"],
-        el["defender"],
-        el["bird"],
-        el["dog"],
-        el["archer"],
-        el["crypt"],
-        el["fungal"],
-        el["floral"],
-        el["sentinel"],
-        el["subject"],
-        el["executionner"],
-        el["sinner"],
-        el["champion"],
-        el["elder"],
-        el["chief"],
-        el["aegis"],
-        el["fellwyrm"],
+        # Main Spirits
+        "Umbral Knight",
+        "Gerrod, the Elder Warrior",
+        "Guardian Silva",
+        "Knight Captain Julius",
+        "Ulv, the Mad Knight",
+        "Dark Witch Eleine",
+        "Hoenir, Keeper of the Abyss",
+        "Faden, the Heretic",
+        # Sub Spirits
+        "Guardian Siegrid",
+        "Cliffside Hamlet Youth",
+        "Headless Defender",
+        "Western Merchant",
+        "Castle Town Maiden",
+        "Fallen Archer",
+        "Elder Crypt Keeper",
+        "Fungal Sorcerer",
+        "Floral Sorceress",
+        "Fallen Sentinel",
+        "Hidden Test Subject",
+        "Dark Executioner",
+        "Incompetent Sinner",
+        "Verboten Champion",
+        "Cliffside Hamlet Elder",
+        "Chief Guardian",
+        "One-Eyed Royal Aegis",
+        "Forsaken Fellwyrm",
     ]
 
     default = option_any_main_spirit
-
     def get_starting_weapon_pool(self) -> List[str]:
         if self.value == StartingSpirit.option_any_main_spirit:
             return StartingSpirit.spirits[:8]
@@ -188,12 +195,12 @@ class ItemPoolPriority(Choice):
     option_all = 2
     default = option_useful
 
-    def sort_items_list(self, items: List[Item], locations_count: int) -> None:
-        def item_score(item: Item):
+    def sort_items_list(self, items: List[Item], locations_count: int) -> List[Item]:
+        def item_score(item: Item) -> int:
             if item.advancement:
                 return 2
-            if item.useful:
-                return self.value == ItemPoolPriority.option_useful
+            if item.useful and self.value == ItemPoolPriority.option_useful:
+                return 1
             return 0
 
         if self.value == ItemPoolPriority.option_all:
@@ -227,9 +234,8 @@ class Goal(Choice):
             return ["Ending_C"]
         else:
             return ["Ending_A", "Ending_B", "Ending_C"]
-
-
         
+
 @option("shuffle_slots")
 class ShuffleRelicsCosts(Toggle):
     """Shuffle the how many slots you need to equip each relics
@@ -242,9 +248,9 @@ class SubSpiritsIncreaseChapter(Toggle):
     """Increase the game difficulty whenever you defeat a Sub Spirit in Addition to Main Bosses
     default: Off"""
 
-    display_name = "Sub-spirits increase chapter"
+    display_name = "Sub-spirits chapters"
 
-@option("NG+")
+@option("ng_plus")
 class NewGamePlusAI(Toggle):
     """Use NG+ AI for enemies with new patterns behaviours
     default: Off"""
@@ -289,18 +295,38 @@ class ChapterMax(Range):
     range_end = 10
     default = 10
     display_name = "Max chapter"
+    
+@option("stone_tablets_placement")
+class StoneTabletsPlacement(Choice):
+    """any: Stone tablets can be anywhere
+    region: Force stone tablet to be placed locally one in each main regions
+    default: any"""
 
-options: Type[Option] = [
-    StartingSpirit,
-    StartingLocation,
-    ItemPoolPriority,
-    Goal,
-    ShuffleRelicsCosts,
-    SubSpiritsIncreaseChapter,
-    NewGamePlusAI,
-    ShuffleSpiritsUpgrades,
-    StartingWeaponUsesAncientSouls,
-    ChapterMin,
-    ChapterMax,
-    ShuffleBGM,
-]
+    option_any = 0
+    option_region = 1
+    default = option_any
+    display_name = "Stone tablets placement"
+    regions = ['Ruined Castle', 'Catacombs', "Witch's Thicket", ('Twin Spires', 'Hinterlands'), 'Stockade', ('Verboten Domain', 'The Abyss'), 'Cliffside Hamlet']
+
+    @classmethod
+    def place_tablets_in_regions(cls, tablets_locations : List[Location], locations : List[Location]) -> List[Tuple[Location, Location]]:
+        locations = tablets_locations + locations
+        new_locations: List[Location]  = [next((location for location in locations if location.name.startswith(region))) for region in StoneTabletsPlacement.regions]
+        tablet_to_swap = [location for location in tablets_locations if location not in new_locations]
+        new_locations = [location for location in new_locations if location not in tablets_locations]
+        return [(tablet_to_swap[i], new_locations[i]) for i in range(len(tablet_to_swap))]
+
+@option("add_unused_items")
+class AddUnusedItems(Toggle):
+    """Add 7 unused relics and a +50HP jewel to the items pool
+    default: Off"""
+
+    display_name = "Add unused items"
+
+# not implemented yet
+#@option("dash_before_lance")
+class DashBeforeLance(DefaultOnToggle):
+    """Make Piercing Lance a progression of Dash meaning you will always find Dash first
+    default: On"""
+
+    display_name = "Dash before lance"
