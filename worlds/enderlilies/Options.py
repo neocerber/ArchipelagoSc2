@@ -320,6 +320,5 @@ class AddUnusedItems(Toggle):
 class DashBeforeLance(DefaultOnToggle):
     """Make Piercing Lance a progression of Dash meaning you will always find Dash first
     default: On"""
+
     display_name = "Dash before lance"
-
-

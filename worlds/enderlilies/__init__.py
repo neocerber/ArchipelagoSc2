@@ -50,12 +50,13 @@ class EnderLiliesWorld(World):
     def generate_early(self):
         early_maneuver_opt = self.get_option(EarlyManeuver)
         if early_maneuver_opt.value != 0:
-            maneuver_items = early_maneuver_opt.get_early_maneuver(self.get_option(StartingLocation))
+            # Maneuver items of interest depends on starting location
+            maneuver_items = early_maneuver_opt.get_early_maneuver(
+                                                      self.get_option(StartingLocation))
             if early_maneuver_opt.value == 1:
                 non_local_items = self.multiworld.non_local_items[self.player].value
-                # For random seed determinism
-                avail_local_maneuver = sorted(item for item in maneuver_items 
-                                          if item not in non_local_items)
+                avail_local_maneuver = [item for item in maneuver_items 
+                                          if item not in non_local_items]
                 item_name = self.multiworld.random.choice(avail_local_maneuver)
                 self.multiworld.local_early_items[self.player][item_name] = 1
             elif early_maneuver_opt.value == 2:
