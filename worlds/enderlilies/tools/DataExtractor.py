@@ -1,5 +1,6 @@
 import json
 import re
+from Locations import locations as l
 
 from typing import Dict, List
 
@@ -102,17 +103,22 @@ for node_name, node in data["nodes"].items():
 for name in data["extra_items"]:
     add_item(name)
 
-with open(names_path, "w") as names_py:
-    print(f"from typing import Dict\n", file=names_py)
-    
-    maxlen = max(len(max(item_aliases.keys(), key=len)),
-                 len(max(nodes_aliases.keys(), key=len)))
-    print("names : Dict[str, str] = {", file=names_py)
-    for alias in item_aliases:
-        print(f'\t"{alias}"{"".ljust(maxlen - len(alias))} : "{item_aliases[alias]}",' ,file=names_py)
-    for alias in nodes_aliases:
-        print(f'\t"{alias}"{"".ljust(maxlen - len(alias))} : "{nodes_aliases[alias]}",' ,file=names_py)
-    print("}\n", file=names_py)
+#with open(names_path, "w") as names_py:
+#    print(f"from typing import Dict\n", file=names_py)
+#    
+#    maxlen = max(len(max(item_aliases.keys(), key=len)),
+#                 len(max(nodes_aliases.keys(), key=len)))
+#    print("names : Dict[str, str] = {", file=names_py)
+#    for alias in item_aliases:
+#        print(f'\t"{alias}"{"".ljust(maxlen - len(alias))} : "{item_aliases[alias]}",' ,file=names_py)
+#    for alias in nodes_aliases:
+#        print(f'\t"{alias}"{"".ljust(maxlen - len(alias))} : "{nodes_aliases[alias]}",' ,file=names_py)
+#    print("}\n", file=names_py)
+#
+
+
+locs = {d.key: name for name, d in l.items() if d.key}
+
 
 with open(rules_path, "w") as rules_py:
     print(f"from typing import Dict, Tuple", file=rules_py)
@@ -129,7 +135,7 @@ with open(rules_path, "w") as rules_py:
         print(f"\t\t'{macro}'{''.ljust(maxlen - len(macro))} : lambda s : {py_rule}," ,file=rules_py)
     print("\t}\n", file=rules_py)
 
-    maxlen = len(max(data["nodes"].keys(), key=len))
+    maxlen = len(max(locs.values(), key=len))
     print("\tlocations_rules : Dict[str, CollectionRule] = {", file=rules_py)
     for node_name, node in data["nodes"].items():
         rule = "True"
@@ -139,7 +145,10 @@ with open(rules_path, "w") as rules_py:
         else:
             py_rule = "True"
         print(f"#\t\t{''.ljust(maxlen)}    {rule}" ,file=rules_py)
-        print(f"\t\t'{node_name}'{''.ljust(maxlen - len(node_name))} : lambda s : {py_rule}," ,file=rules_py)
+        n = node_name
+        if node_name in locs:
+            n = locs[node_name]
+        print(f'\t\t"{n}"{"".ljust(maxlen - len(n))} : lambda s : {py_rule},' ,file=rules_py)
     print("\t}\n", file=rules_py)
 
     print("\titems_rules : Dict[str, ItemRule] = {", file=rules_py)
