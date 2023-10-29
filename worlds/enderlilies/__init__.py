@@ -42,6 +42,22 @@ class EnderLiliesWorld(World):
     location_name_to_id = {name: data.address for name, data in locations.items()}
     item_name_to_id = {name: data.code for name, data in items.items()}
 
+    def generate_early(self):
+        early_maneuver_opt = self.get_option(EarlyManeuver)
+        if early_maneuver_opt.value != 0:
+            # Maneuver items of interest depends on starting location
+            maneuver_items = early_maneuver_opt.get_early_maneuver(
+                                                      self.get_option(StartingLocation))
+            if early_maneuver_opt.value == 1:
+                non_local_items = self.multiworld.non_local_items[self.player].value
+                avail_local_maneuver = [item for item in maneuver_items 
+                                          if item not in non_local_items]
+                item_name = self.multiworld.random.choice(avail_local_maneuver)
+                self.multiworld.local_early_items[self.player][item_name] = 1
+            elif early_maneuver_opt.value == 2:
+                item_name = self.multiworld.random.choice(maneuver_items)
+                self.multiworld.early_items[self.player][item_name] = 1
+
     def create_item(self, item: str) -> EnderLiliesItem:
         if item in self.item_name_to_id:
             item_object = EnderLiliesItem(item, items[item], self.player)
