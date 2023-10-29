@@ -26,7 +26,7 @@ def option(name: str):
 @option("starting_spirit")
 class StartingSpirit(Choice):
     """Defines the spirit you start with, starting spirit will have infinite usage.
-    default: Any Main Spirit."""
+    default: Any Main Spirit"""
 
     display_name = "Starting spirit"
 
@@ -105,7 +105,7 @@ class StartingSpirit(Choice):
 @option("starting_location")
 class StartingLocation(Choice):
     """Defines where you start the game.
-    default: start."""
+    default: Start"""
 
     display_name = "Starting location"
 
@@ -153,10 +153,9 @@ class StartingLocation(Choice):
 @option("item_pool_priority")
 class ItemPoolPriority(Choice):
     """Defines what items will be kept in the pool when there are more items than locations left
-    Useful: Give priority to useful items over filler (Findings).
+    Useful: Give priority to useful items over filler (Default).
     Any: Priority is the same for any non-progression items.
-    All: Leave all items in the pool and let Archipelago pick
-    default: Useful."""
+    All: Leave all items in the pool and let Archipelago pick"""
 
     display_name = "Prioritize Useful Items"
     option_any = 0
@@ -183,9 +182,8 @@ class Goal(Choice):
     """Goal to complete for Archipelago
     Ending A - Benevolence.
     Ending B - Journey's End.
-    Ending C - Dawn Prayer.
-    Any Ending: Achieving any Ending.
-    default: Ending C"""
+    Ending C - Dawn Prayer. (Default)
+    Any Ending: Achieving any Ending."""
 
     display_name = "Goal"
     option_ending_a = 0
@@ -204,16 +202,16 @@ class Goal(Choice):
         else:
             return ["Ending_A", "Ending_B", "Ending_C"]
 
+# This option might not work as intended with room randomizer. 
 @option("early_maneuver")
 class EarlyManeuver(Choice):
     """Defines if a maneuver item, e.g. claw, should be placed early. 
     The goal of this option is to reduce possibility of early BK.
-    This option might not work as intended with room randomizer. 
 
     local: Ensure that a maneuver item is in sphere 1 of the EL player.
     global: Ensure that a maneuver item is in sphere 1 of any player in the multiworld.
     none: Do nothing. (Default) """
-    display_name = "Ensure early maneuver item"
+    display_name = "Force early maneuver"
     option_none = 0
     option_local = 1
     option_global = 2
@@ -287,9 +285,8 @@ class ChapterMax(Range):
     
 @option("stone_tablets_placement")
 class StoneTabletsPlacement(Choice):
-    """any: Stone tablets can be anywhere
-    region: Force stone tablet to be placed locally one in each main regions
-    default: any"""
+    """any: Stone tablets can be anywhere. (Default)
+    region: Force stone tablet to be placed locally one in each main regions."""
 
     option_any = 0
     option_region = 1

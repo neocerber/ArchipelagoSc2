@@ -1,76 +1,44 @@
-from typing import List, Union
+from typing import List, Dict
 
 class StartingLocationData():
-    yamlKey: str
     clientKey: str
     earlyManeuverItems: List[str]
-    def __init__(self, yamlKey: str, clientKey: str, 
-                 earlyManeuverItems: Union[List[str], str]):
-        # Not used right now...
-        self.yamlKey = yamlKey
+
+    def __init__(self, clientKey: str, earlyManeuverItems: List[str]):
         self.clientKey = clientKey
-        if type(earlyManeuverItems) is not list:
-            self.earlyManeuverItems = [earlyManeuverItems] 
-        else:
-            self.earlyManeuverItems = earlyManeuverItems
+        self.earlyManeuverItems = earlyManeuverItems
         if "LEDGE" in earlyManeuverItems:
             self.earlyManeuverItems.remove("LEDGE")
             self.earlyManeuverItems.extend(["djump", "silva", "champion"])
         # For random seed determinism
         self.earlyManeuverItems.sort()
 
-startingLocationsData = {}
-startingLocationsData[0] = StartingLocationData("start", 
-                                    "Start", ["LEDGE", "claw"])
-startingLocationsData[3] = StartingLocationData("cellar", 
-                                    "Cellar", ["LEDGE", "claw"])
-startingLocationsData[5] = StartingLocationData("cathedral_cloister", 
-                                    "CathedralCloister", ["LEDGE", "claw"])
-startingLocationsData[9] = StartingLocationData("saints_passage", 
-                                    "SaintsPassage", ["LEDGE", "claw"])
-startingLocationsData[12] = StartingLocationData("crossroads", 
-                                    "Crossroads", ["LEDGE", "claw"])
-startingLocationsData[19] = StartingLocationData("collapsed_shack", 
-                                    "CollapsedShack", ["LEDGE", "hook"])
-startingLocationsData[23] = StartingLocationData("bridgehead", 
-                                    "BridgeHead", "swim")
-startingLocationsData[35] = StartingLocationData("ruined_castle_cellar", 
-                                    "RuinedCastleCellar", ["LEDGE", "claw"])
-startingLocationsData[38] = StartingLocationData("guest_chamber", 
-                                    "GuestChamber", ["LEDGE", "claw"])
-startingLocationsData[41] = StartingLocationData("maelstrom_remparts", 
-                                    "MaelstromRemparts", "claw")
-startingLocationsData[55] = StartingLocationData("bastion_gates", 
-                                    "BastionGates", ["LEDGE", "sinner"])
-startingLocationsData[61] = StartingLocationData("courtyard", 
-                                    "Courtyard", "LEDGE")
-startingLocationsData[62] = StartingLocationData("second_spire_chamber", 
-                                    "SecondSpireChamber", "LEDGE")
-startingLocationsData[72] = StartingLocationData("mourninghall", 
-                                    "MourningHall", "claw")
-startingLocationsData[78] = StartingLocationData("dryad_lake", 
-                                    "DryadLake", ["LEDGE", "claw"])
-startingLocationsData[83] = StartingLocationData("witchs_hermitage", 
-                                    "WitchsHermitage", "LEDGE")
-startingLocationsData[87] = StartingLocationData("covenhalls", 
-                                    "CovenHalls", "LEDGE")
-startingLocationsData[91] = StartingLocationData("bottom_of_the_well", 
-                                    "BottomOfTheWell", "claw")
-startingLocationsData[93] = StartingLocationData("charnel", 
-                                    "Charnel", "claw")
-startingLocationsData[103] = StartingLocationData("ossuary", 
-                                    "Ossuary", ["LEDGE", "claw", "sinner"])
-startingLocationsData[106] = StartingLocationData("great_hall", 
-                                    "GreatHall", "claw")
-startingLocationsData[115] = StartingLocationData("aqueduct", 
-                                    "Aqueduct", ["LEDGE", "claw", "swim"])
-startingLocationsData[123] = StartingLocationData("cells", 
-                                    "Cells", "swim")
-startingLocationsData[132] = StartingLocationData("dark_chamber", 
-                                    "DarkChamber", "hook")
-startingLocationsData[138] = StartingLocationData("execution_grounds", 
-                                    "ExecutionGrounds", "hook")
-startingLocationsData[145] = StartingLocationData("lab1", 
-                                    "Lab1", "swim")
-startingLocationsData[150] = StartingLocationData("lab2", 
-                                    "Lab2", "LEDGE")
+startingLocationsData : Dict[int, StartingLocationData] = {
+    0   : StartingLocationData("Start",              ["LEDGE", "claw"]),
+    3   : StartingLocationData("Cellar",             ["LEDGE", "claw"]),
+    5   : StartingLocationData("CathedralCloister",  ["LEDGE", "claw"]),
+    9   : StartingLocationData("SaintsPassage",      ["LEDGE", "claw"]),
+    12  : StartingLocationData("Crossroads",         ["LEDGE", "claw"]),
+    19  : StartingLocationData("CollapsedShack",     ["LEDGE", "hook"]),
+    23  : StartingLocationData("BridgeHead",         ["swim"]),
+    35  : StartingLocationData("RuinedCastleCellar", ["LEDGE", "claw"]),
+    38  : StartingLocationData("GuestChamber",       ["LEDGE", "claw"]),
+    41  : StartingLocationData("MaelstromRemparts",  ["claw"]),
+    55  : StartingLocationData("BastionGates",       ["LEDGE", "sinner"]),
+    61  : StartingLocationData("Courtyard",          ["LEDGE"]),
+    62  : StartingLocationData("SecondSpireChamber", ["LEDGE"]),
+    72  : StartingLocationData("MourningHall",       ["claw"]),
+    78  : StartingLocationData("DryadLake",          ["LEDGE", "claw"]),
+    83  : StartingLocationData("WitchsHermitage",    ["LEDGE"]),
+    87  : StartingLocationData("CovenHalls",         ["LEDGE"]),
+    91  : StartingLocationData("BottomOfTheWell",    ["claw"]),
+    93  : StartingLocationData("Charnel",            ["claw"]),
+    103 : StartingLocationData("Ossuary",            ["LEDGE", "claw", "sinner"]),
+    106 : StartingLocationData("GreatHall",          ["claw"]),
+    115 : StartingLocationData("Aqueduct",           ["LEDGE", "claw", "swim"]),
+    123 : StartingLocationData("Cells",              ["swim"]),
+    132 : StartingLocationData("DarkChamber",        ["hook"]),
+    138 : StartingLocationData("ExecutionGrounds",   ["hook"]),
+    145 : StartingLocationData("Lab1",               ["swim"]),
+    150 : StartingLocationData("Lab2",               ["LEDGE"]),
+}
