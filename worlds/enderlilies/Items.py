@@ -1,4 +1,4 @@
-from typing import Optional, NamedTuple, Dict
+from typing import Optional, Dict
 from BaseClasses import ItemClassification as IC
 
 class ItemData():

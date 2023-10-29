@@ -1,11 +1,8 @@
-from functools import total_ordering
 from worlds.AutoWorld import World
-from BaseClasses import Item, ItemClassification, Location, Dict
-from operator import index
-from typing import Any, Callable, Dict, Tuple, Type, List, Union, FrozenSet
+from BaseClasses import Item, Location, Dict
+from typing import Dict, Tuple, Type, List
 from Options import Choice, Option, DefaultOnToggle, Toggle, Range
 from .Names import names as el
-from .Items import items
 
 options: Dict[str, Option] = {}
 

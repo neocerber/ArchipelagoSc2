@@ -1,12 +1,7 @@
-import json
-import os
-from tkinter import SEL
-from Utils import get_default_options
-
 from worlds.AutoWorld import World
 from BaseClasses import ItemClassification, Region, Item, Location, Type
 from worlds.generic.Rules import set_rule, add_item_rule
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from Options import Option
 from Fill import swap_location_item
 
