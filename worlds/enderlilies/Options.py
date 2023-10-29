@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, Tuple, Type, List, Union, FrozenSet
 from Options import Choice, Option, DefaultOnToggle, Toggle, Range
 from .Names import names as el
 from .Items import items
+from .data.StartingLocations import startingLocationsData
 
 options: Dict[str, Option] = {}
 
@@ -147,38 +148,9 @@ class StartingLocation(Choice):
     option_lab2 = 150
 
     default = option_start
-    id_to_name = {
-        0: "Start",
-        3: "Cellar",
-        5: "CathedralCloister",
-        9: "SaintsPassage",
-        12: "Crossroads",
-        19: "CollapsedShack",
-        23: "BridgeHead",
-        35: "RuinedCastleCellar",
-        38: "GuestChamber",
-        41: "MaelstromRemparts",
-        55: "BastionGates",
-        61: "Courtyard",
-        62: "SecondSpireChamber",
-        72: "MourningHall",
-        78: "DryadLake",
-        83: "WitchsHermitage",
-        87: "CovenHalls",
-        91: "BottomOfTheWell",
-        93: "Charnel",
-        103: "Ossuary",
-        106: "GreatHall",
-        115: "Aqueduct",
-        123: "Cells",
-        132: "DarkChamber",
-        138: "ExecutionGrounds",
-        145: "Lab1",
-        150: "Lab2",
-    }
 
     def get_starting_location(self) -> str:
-        return el[StartingLocation.id_to_name[self.value]]
+        return el[startingLocationsData[self.value].clientKey]
 
 
 @option("item_pool_priority")
@@ -235,22 +207,25 @@ class Goal(Choice):
         else:
             return ["Ending_A", "Ending_B", "Ending_C"]
 
-@option("EarlyManeuver")
+@option("early_maneuver")
 class EarlyManeuver(Choice):
-    """Defines if a maneuver item, i.e. double jump, Silva, Champion or claw, should be placed early. 
-    Without a maneuver item, only nine checks are available at the start.
-    This option only work when the starting position is vanilla and without room randomizer. 
+    """Defines if a maneuver item, e.g. claw, should be placed early. 
+    The goal of this option is to reduce possibility of early BK.
+    This option might not work as intended with room randomizer. 
 
-    local: Ensure that a maneuver item is in sphere 0 of the EL player.
-    global: Ensure that a maneuver item is in sphere 0 of any player in the multiworld.
-    none: Do nothing.  """
-    display_name = "Force early maneuver item"
+    local: Ensure that a maneuver item is in sphere 1 of the EL player.
+    global: Ensure that a maneuver item is in sphere 1 of any player in the multiworld.
+    none: Do nothing. (Default) """
+    display_name = "Ensure early maneuver item"
     option_none = 0
     option_local = 1
     option_global = 2
+
     default = option_none
 
-
+    def get_early_maneuver(self, startLocationId) -> List[str]:
+        # Only called if needed
+        return [el[item] for item in startingLocationsData[startLocationId].earlyManeuverItems]
         
 
 @option("shuffle_slots")
