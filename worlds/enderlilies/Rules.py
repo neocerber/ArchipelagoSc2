@@ -1542,7 +1542,7 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Starting Spirit"                                      : lambda s : True,
 		'Ending_A'                                             : lambda s : s.has(el['Outside02Left'], p),
 		'Ending_B'                                             : lambda s : s.has(el['Abyss03Left'], p),
-		'Ending_C'                                             : lambda s : s.has(el['Abyss03Left'], p) and (s.count(el["tablet"], p) == 7),
+		'Ending_C'                                             : lambda s : s.has(el['Abyss03Left'], p) and (s.count(el["tablet"], p) >= 7),
 	}
 
 	items_rules : Dict[str, ItemRule] = {

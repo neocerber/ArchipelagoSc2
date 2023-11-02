@@ -3,7 +3,7 @@ from BaseClasses import Item, Location, Dict
 from typing import Dict, Tuple, Type, List
 from Options import Choice, Option, DefaultOnToggle, Toggle, Range
 from .Names import names as el
-from .data.StartingLocations import startingLocationsData
+from .StartingLocations import startingLocationsData
 
 options: Dict[str, Option] = {}
 
@@ -316,3 +316,11 @@ class DashBeforeLance(DefaultOnToggle):
     default: On"""
 
     display_name = "Dash before lance"
+    
+@option("entrance_randomizer")
+class RandomizeEntrances(Toggle):
+    """Randomize every room entrances and exits,
+    ensure transitions are two-ways so you can go back and forth
+    default: Off"""
+
+    display_name = "Randomize Entrances"

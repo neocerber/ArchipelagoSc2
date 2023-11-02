@@ -1,7 +1,7 @@
 from worlds.AutoWorld import World
 from BaseClasses import ItemClassification, Region, Item, Location, Type
 from worlds.generic.Rules import set_rule, add_item_rule
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, TextIO, Union
 from Options import Option
 from Fill import swap_location_item
 
@@ -10,10 +10,15 @@ from .Locations import LocationData, locations
 from .Rules import get_rules
 from .Options import *
 
+from .EntranceRandomizer import EntranceRandomizer
+
 ENDERLILIES = "Ender Lilies"
 
 class EnderLiliesEvent(Item):
     game = ENDERLILIES
+
+    def key(self):
+        return self.name
 
 class EnderLiliesItem(Item):
     game = ENDERLILIES
@@ -23,6 +28,9 @@ class EnderLiliesItem(Item):
         super().__init__(name, data.classification, data.code, player)
         self.data = data
 
+    def key(self):
+        return self.data.key
+
 class EnderLiliesLocation(Location):
     game = ENDERLILIES
     data : LocationData
@@ -30,6 +38,9 @@ class EnderLiliesLocation(Location):
     def __init__(self, player: int, name: str, data : LocationData, parent: Optional[Region] = None):
         super().__init__(player, name, data.address, parent)
         self.data = data
+
+    def key(self):
+        return self.data.key
 
 
 class EnderLiliesWorld(World):
@@ -94,6 +105,15 @@ class EnderLiliesWorld(World):
         self.multiworld.regions.extend(regions.values())
         victory = self.get_option(Goal).get_victory_locations()
         regions["Menu"].connect(regions["Game"])
+        
+        randomized_entrances = {}
+        starting_location = self.get_option(StartingLocation).get_starting_location()        
+        if self.get_option(RandomizeEntrances):
+            er = EntranceRandomizer(starting_location)
+            portals = er.get_portals()
+            self.multiworld.random.shuffle(portals)
+            randomized_entrances = er.Randomize(portals)
+
         for location, data in locations.items():
             check = EnderLiliesLocation(self.player, location, data, regions["Game"])
             if not data.address:
@@ -101,7 +121,11 @@ class EnderLiliesWorld(World):
                 if location in victory:
                     check.place_locked_item(self.create_item("Victory"))
                 else:
-                    check.place_locked_item(self.create_item(data.content))
+                    if location in randomized_entrances:
+                        check.place_locked_item(self.create_item(randomized_entrances[location]))
+                        check.show_in_spoiler = True
+                    else:
+                        check.place_locked_item(self.create_item(data.content))
             regions["Game"].locations.append(check)
 
     def post_fill(self) -> None:
@@ -157,14 +181,13 @@ class EnderLiliesWorld(World):
             slot_data[f'SETTINGS:{ChapterMin.name}'] = str(self.get_option(ChapterMin).value)
         if self.get_option(ChapterMax).value != ChapterMax.default:
             slot_data[f'SETTINGS:{ChapterMax.name}'] = str(self.get_option(ChapterMax).value)
-
         slot_data["SETTINGS:starting_room"] = str(self.get_option(StartingLocation).value)
         for location in self.multiworld.get_locations(self.player):
             if location.show_in_spoiler:
                 if location.item.player == self.player:
-                    slot_data[location.data.key] = f"{location.item.data.key}"
+                    slot_data[location.key()] = f"{location.item.key()}"
                 else:
-                    slot_data[location.data.key] = f"AP.{self.multiworld.player_name[location.item.player]}|{location.item.game}|{location.item.name}"
+                    slot_data[location.key()] = f"AP.{self.multiworld.player_name[location.item.player]}|{location.item.game}|{location.item.name}"
         return slot_data
 
     def get_option(self, option: Union[str, Type[Option]]) -> Option:
