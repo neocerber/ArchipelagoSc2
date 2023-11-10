@@ -159,9 +159,9 @@ with open(rules_path, "w") as rules_py:
         print(f"#\t\t{''.ljust(maxlen)}    {rule}" ,file=rules_py)
 
         print(f'\t\t"{n}"{"".ljust(maxlen - len(n))} : lambda s : {py_rule},' ,file=rules_py)
-    print("\t\t'Ending_A'                                             : lambda s : s.has(el['Outside02Left'], p),", file=rules_py)
-    print("\t\t'Ending_B'                                             : lambda s : s.has(el['Abyss03Left'], p),", file=rules_py)
-    print("\t\t'Ending_C'                                             : lambda s : s.has(el['Abyss03Left'], p) and (s.count(el['tablet'], p) >= 7),", file=rules_py)
+    print("\t\t'Ending_A'                                             : lambda s : True,", file=rules_py)
+    print("\t\t'Ending_B'                                             : lambda s : True,", file=rules_py)
+    print("\t\t'Ending_C'                                             : lambda s : s.can_reach('Church_13', 'Region', p) and s.count(el['tablet'], p) >= 7,", file=rules_py)
         
     print("\t}\n", file=rules_py)
 
@@ -171,12 +171,12 @@ with open(rules_path, "w") as rules_py:
     
     print("\treturn (locations_rules, items_rules)", file=rules_py)
     
-    print('indirect = {', file=rules_py)
-    for _, i in indirect.items():
-        if len(i):
-            regions = [region_aliases[region] for region in i]
-            print(f'"{_}": {regions},', file=rules_py)
-    print('}', file=rules_py)
+#    print('indirect = {', file=rules_py)
+#    for _, i in indirect.items():
+#        if len(i):
+#            regions = [region_aliases[region] for region in i]
+#            print(f'"{_}": {regions},', file=rules_py)
+#    print('}', file=rules_py)
 #
 #with open(items_path, "w") as items_py:
 #    print("from typing import Optional, NamedTuple, Dict", file=items_py)

@@ -1125,19 +1125,19 @@
     },
     "Abyss_05_GAMEPLAY.BP_Interactable_Item_FinalPassivePart_2": {
       "content": "Generic.i_FinalPassivePart_Up",
-      "rules": "Abyss05Top"
+      "rules": "Abyss05Top + swim"
     },
     "Abyss_05_GAMEPLAY.BP_Interactable_Item_Tip4": {
       "content": "Tip.tip_065",
-      "rules": "Abyss05Top"
+      "rules": "Abyss05Top + swim"
     },
     "Abyss_05_GAMEPLAY.BP_Interactable_WorldTravel_2": {
       "content": "Map.map_swamp_12.A5",
-      "rules": "Abyss05Top"
+      "rules": "Abyss05Top + swim"
     },
     "Abyss_05_GAMEPLAY.BP_SCR_LV3S_5000_1": {
       "content": "Generic.i_SpiritCurrencyLv3_2",
-      "rules": "Abyss05Top"
+      "rules": "Abyss05Top + swim"
     },
     "Abyss_05_GAMEPLAY.BP_WorldTravelVolume": {
       "content": "Map.map_abyss_04.5",

@@ -54,14 +54,14 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"The Abyss 04 To Verboten Domain 12"                   : lambda s : s.can_reach(el['Abyss04Top'], 'Region', p),
 #		                                                        Abyss04Bottom | Abyss04Top + mask + swim + slam + hook + 3HEAL + dash
 		"The Abyss 04 To The Abyss 05"                         : lambda s : s.can_reach(el['Abyss04Bottom'], 'Region', p) or s.can_reach(el['Abyss04Top'], 'Region', p) and s.has(el['mask'], p) and s.has(el['swim'], p) and s.has(el['slam'], p) and s.has(el['hook'], p) and macros['3HEAL'](s) and s.has(el['dash'], p),
-#		                                                        Abyss05Top
-		"The Abyss 05 - Stone Tablet Fragment"                 : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p),
-#		                                                        Abyss05Top
-		"The Abyss 05 - The Deathless Pact"                    : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p),
-#		                                                        Abyss05Top
-		"The Abyss 05 To Verboten Domain 12"                   : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p),
-#		                                                        Abyss05Top
-		"The Abyss 05 - Ancient Soul x2"                       : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p),
+#		                                                        Abyss05Top + swim
+		"The Abyss 05 - Stone Tablet Fragment"                 : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p) and s.has(el['swim'], p),
+#		                                                        Abyss05Top + swim
+		"The Abyss 05 - The Deathless Pact"                    : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p) and s.has(el['swim'], p),
+#		                                                        Abyss05Top + swim
+		"The Abyss 05 To Verboten Domain 12"                   : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p) and s.has(el['swim'], p),
+#		                                                        Abyss05Top + swim
+		"The Abyss 05 - Ancient Soul x2"                       : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p) and s.has(el['swim'], p),
 #		                                                        Abyss05Top
 		"The Abyss 05 To The Abyss 04"                         : lambda s : s.can_reach(el['Abyss05Top'], 'Region', p),
 #		                                                        Castle01Left | Castle01Right1 | Castle01Top | Castle01Right2
@@ -1542,7 +1542,7 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Starting Spirit"                                      : lambda s : True,
 		'Ending_A'                                             : lambda s : True,
 		'Ending_B'                                             : lambda s : True,
-		'Ending_C'                                             : lambda s : s.can_reach('Church_13', 'Region', p) and (s.count(el['tablet'], p) >= 7),
+		'Ending_C'                                             : lambda s : s.can_reach('Church_13', 'Region', p) and s.count(el['tablet'], p) >= 7,
 	}
 
 	items_rules : Dict[str, ItemRule] = {
