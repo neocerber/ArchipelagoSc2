@@ -2,7 +2,7 @@ import json
 import re
 from Locations import locations as l
 
-from typing import Dict, List
+from typing import Dict, List, Set, Tuple, Union
 
 json_path       = "worlds/enderlilies/tools/EnderLilies.Randomizer.json"
 names_path      = "worlds/enderlilies/Names.py"
@@ -28,8 +28,8 @@ def add_item(item : str):
             items[item] = [0, 'filler']
     items[item][0] += 1
 
-def rule_to_py(rule: str) -> str:
-    global macros, item_aliases, nodes_aliases
+def rule_to_py(rule: str, get_region=False) -> Union[str, Tuple[str, Set[str]]]:
+    global macros, item_aliases, nodes_aliases, region_aliases
 
     # Tokenization
     logic_pattern = r"\b\w+\b|\(|\)|\||\+"
@@ -41,6 +41,7 @@ def rule_to_py(rule: str) -> str:
         "+" : " and ",
         "|" : " or ",
     }
+    regions = set()
 
     py_rule = ""
     for token in logic_tokens:
@@ -53,9 +54,14 @@ def rule_to_py(rule: str) -> str:
         elif token in item_aliases:
             py_rule += f"s.has(el['{token}'], p)"
             set_is_progress(item_aliases[token])
+        elif token in region_aliases:
+            py_rule += f"s.can_reach(el['{token}'], 'Region', p)"
+            regions.add(token)
         else:
             py_rule += f"s.has('{token}', p)"
             set_is_progress(token)
+    if get_region:
+        return py_rule, regions
     return py_rule
 
 with open(json_path, "r") as f:
@@ -63,6 +69,7 @@ with open(json_path, "r") as f:
 
 item_aliases = {}
 nodes_aliases = {}
+region_aliases = {}
 
 events : Dict[str, any] = {}
 items : Dict[str, any] = {}
@@ -75,7 +82,7 @@ for alias, item in data["items_alias"].items():
 
 for alias, node in data["nodes_alias"].items():
     if node.startswith("Map."):
-        item_aliases[alias] = node
+        region_aliases[alias] = node
     else:
         nodes_aliases[alias] = node
 
@@ -118,7 +125,7 @@ for name in data["extra_items"]:
 
 
 locs = {d.key: name for name, d in l.items() if d.key}
-
+indirect = {}
 
 with open(rules_path, "w") as rules_py:
     print(f"from typing import Dict, Tuple", file=rules_py)
@@ -138,24 +145,38 @@ with open(rules_path, "w") as rules_py:
     maxlen = len(max(locs.values(), key=len))
     print("\tlocations_rules : Dict[str, CollectionRule] = {", file=rules_py)
     for node_name, node in data["nodes"].items():
-        rule = "True"
-        if 'rules' in node:
-            py_rule = rule_to_py(node['rules'])
-            rule = node['rules']
-        else:
-            py_rule = "True"
-        print(f"#\t\t{''.ljust(maxlen)}    {rule}" ,file=rules_py)
         n = node_name
         if node_name in locs:
             n = locs[node_name]
+        rule = "True"
+        if 'rules' in node:
+            py_rule, regions = rule_to_py(node['rules'], True)
+            rule = node['rules']
+            if 'content' in node and node['content'].startswith("Map."):
+                indirect[n] = regions
+        else:
+            py_rule = "True"
+        print(f"#\t\t{''.ljust(maxlen)}    {rule}" ,file=rules_py)
+
         print(f'\t\t"{n}"{"".ljust(maxlen - len(n))} : lambda s : {py_rule},' ,file=rules_py)
+    print("\t\t'Ending_A'                                             : lambda s : s.has(el['Outside02Left'], p),", file=rules_py)
+    print("\t\t'Ending_B'                                             : lambda s : s.has(el['Abyss03Left'], p),", file=rules_py)
+    print("\t\t'Ending_C'                                             : lambda s : s.has(el['Abyss03Left'], p) and (s.count(el['tablet'], p) >= 7),", file=rules_py)
+        
     print("\t}\n", file=rules_py)
 
     print("\titems_rules : Dict[str, ItemRule] = {", file=rules_py)
-    print("\t\t'starting_weapon' : lambda item : item.player == p and item.name.startswith('Spirit.'),", file=rules_py)
+    print("\t\t'Starting Spirit' : lambda item : item.player == p and item.name.startswith('Spirit.'),", file=rules_py)
     print("\t}\n", file=rules_py)
     
     print("\treturn (locations_rules, items_rules)", file=rules_py)
+    
+    print('indirect = {', file=rules_py)
+    for _, i in indirect.items():
+        if len(i):
+            regions = [region_aliases[region] for region in i]
+            print(f'"{_}": {regions},', file=rules_py)
+    print('}', file=rules_py)
 #
 #with open(items_path, "w") as items_py:
 #    print("from typing import Optional, NamedTuple, Dict", file=items_py)
