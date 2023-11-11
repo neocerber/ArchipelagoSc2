@@ -185,10 +185,10 @@ class EnderLiliesWorld(World):
             "Victory", self.player
         )
 
-    def generate_basic(self) -> None:
-        from Utils import visualize_regions
-        visualize_regions(self.multiworld.get_region("Menu", self.player), "my_world.puml")
-        return super().generate_basic()
+#    def generate_basic(self) -> None:
+#        from Utils import visualize_regions
+#        visualize_regions(self.multiworld.get_region("Menu", self.player), "my_world.puml")
+#        return super().generate_basic()
 
     def fill_slot_data(self) -> Dict[str, Any]:
         # Content that will be send to the game
