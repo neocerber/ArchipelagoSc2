@@ -829,6 +829,12 @@ class Region:
         def __len__(self) -> int:
             return self._list.__len__()
 
+        def __iter__(self):
+            return self._list.__iter__()
+        
+        def __next__(self):
+            return self._list.__next__()
+
         # This seems to not be needed, but that's a bit suspicious.
         # def __del__(self):
         #     self.clear()
@@ -1002,7 +1008,7 @@ class Location:
     def can_reach(self, state: CollectionState) -> bool:
         # self.access_rule computes faster on average, so placing it first for faster abort
         assert self.parent_region, "Can't reach location without region"
-        return self.access_rule(state) and self.parent_region.can_reach(state)
+        return self.parent_region.can_reach(state) and self.access_rule(state)
 
     def place_locked_item(self, item: Item):
         if self.item:
