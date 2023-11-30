@@ -76,8 +76,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Ruined Castle 01 - Furious Blight x100"               : lambda s : s.can_reach(el['Dog'], 'Location', p) and macros['CHARGE'](s),
 #		                                                        Castle01Left | Dog
 		"Ruined Castle 01 To Cliffside Hamlet 11"              : lambda s : s.can_reach(el['Castle01Left'], 'Region', p) or s.can_reach(el['Dog'], 'Location', p),
-#		                                                        Castle01Right2
-		"Ruined Castle 01 To Ruined Castle 02 Lower"           : lambda s : s.can_reach(el['Castle01Right2'], 'Region', p),
+#		                                                        Castle01Right2 | Dog + (HORIZONTAL | LEDGE | dash)
+		"Ruined Castle 01 To Ruined Castle 02 Lower"           : lambda s : s.can_reach(el['Castle01Right2'], 'Region', p) or s.can_reach(el['Dog'], 'Location', p) and (macros['HORIZONTAL'](s) or macros['LEDGE'](s) or s.has(el['dash'], p)),
 #		                                                        Castle01Right1 | Castle01Top
 		"Ruined Castle 01 To Ruined Castle 02 Upper"           : lambda s : s.can_reach(el['Castle01Right1'], 'Region', p) or s.can_reach(el['Castle01Top'], 'Region', p),
 #		                                                        Castle01Right1 + claw
@@ -92,8 +92,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Ruined Castle 02 To Ruined Castle 01 Lower"           : lambda s : s.can_reach(el['Castle02Left2'], 'Region', p) or s.can_reach(el['Castle02Left1'], 'Region', p) or s.can_reach(el['Castle02Top'], 'Region', p) or s.can_reach(el['Castle02Bottom'], 'Region', p),
 #		                                                        Castle02Bottom | Castle02Left2
 		"Ruined Castle 02 To Ruined Castle 04"                 : lambda s : s.can_reach(el['Castle02Bottom'], 'Region', p) or s.can_reach(el['Castle02Left2'], 'Region', p),
-#		                                                        Castle02Left1 | Castle02Left2 + (claw + LEDGE)
-		"Ruined Castle 02 To Ruined Castle 01 Upper"           : lambda s : s.can_reach(el['Castle02Left1'], 'Region', p) or s.can_reach(el['Castle02Left2'], 'Region', p) and (s.has(el['claw'], p) and macros['LEDGE'](s)),
+#		                                                        Castle02Left1 | Castle02Left2 + (claw + (djump | champion))
+		"Ruined Castle 02 To Ruined Castle 01 Upper"           : lambda s : s.can_reach(el['Castle02Left1'], 'Region', p) or s.can_reach(el['Castle02Left2'], 'Region', p) and (s.has(el['claw'], p) and (s.has(el['djump'], p) or s.has(el['champion'], p))),
 #		                                                        (Castle03Top1 | Castle03Top2) + (hook | claw | HORIZONTAL | dash | LEDGE)
 		"Ruined Castle 03 - Amulet Fragment"                   : lambda s : (s.can_reach(el['Castle03Top1'], 'Region', p) or s.can_reach(el['Castle03Top2'], 'Region', p)) and (s.has(el['hook'], p) or s.has(el['claw'], p) or macros['HORIZONTAL'](s) or s.has(el['dash'], p) or macros['LEDGE'](s)),
 #		                                                        (Castle03Top1 | Castle03Top2) + (hook | claw | LEDGE + HORIZONTAL)
@@ -282,8 +282,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Catacombs 01 To Catacombs 02"                         : lambda s : s.can_reach(el['BottomOfTheWell'], 'Location', p),
 #		                                                        BottomOfTheWell
 		"Catacombs 01 To Cliffside Hamlet 12"                  : lambda s : s.can_reach(el['BottomOfTheWell'], 'Location', p),
-#		                                                        Cave02Right + (hook | claw + (HORIZONTAL | djump | champion + dash | silva + dash))
-		"Catacombs 02 - Stagnant Blight x30"                   : lambda s : s.can_reach(el['Cave02Right'], 'Region', p) and (s.has(el['hook'], p) or s.has(el['claw'], p) and (macros['HORIZONTAL'](s) or s.has(el['djump'], p) or s.has(el['champion'], p) and s.has(el['dash'], p) or s.has(el['silva'], p) and s.has(el['dash'], p))),
+#		                                                        Cave02Right + (hook | claw + (HORIZONTAL | LEDGE + dash))
+		"Catacombs 02 - Stagnant Blight x30"                   : lambda s : s.can_reach(el['Cave02Right'], 'Region', p) and (s.has(el['hook'], p) or s.has(el['claw'], p) and (macros['HORIZONTAL'](s) or macros['LEDGE'](s) and s.has(el['dash'], p))),
 #		                                                        Cave02Right
 		"Catacombs 02 - Stagnant Blight x10"                   : lambda s : s.can_reach(el['Cave02Right'], 'Region', p),
 #		                                                        Cave02Right | Cave02Bottom | Cave02Top
@@ -634,8 +634,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Witch's Thicket 07 - Stagnant Blight x30"             : lambda s : s.can_reach(el['Forest07Right'], 'Region', p) and (s.has(el['hook'], p) or s.has(el['claw'], p) and macros['LEDGE'](s)),
 #		                                                        Forest07Left | Forest07Right
 		"Witch's Thicket 07 - Stagnant Blight x10"             : lambda s : s.can_reach(el['Forest07Left'], 'Region', p) or s.can_reach(el['Forest07Right'], 'Region', p),
-#		                                                        Forest07Right | Forest07Left + (dodge + (LEDGE | dash) | 2LEDGE | hook | sinner | djump + dash)
-		"Witch's Thicket 07 To Stockade 01"                    : lambda s : s.can_reach(el['Forest07Right'], 'Region', p) or s.can_reach(el['Forest07Left'], 'Region', p) and (s.has(el['dodge'], p) and (macros['LEDGE'](s) or s.has(el['dash'], p)) or macros['2LEDGE'](s) or s.has(el['hook'], p) or s.has(el['sinner'], p) or s.has(el['djump'], p) and s.has(el['dash'], p)),
+#		                                                        Forest07Right | Forest07Left + (dodge + (LEDGE | dash)) | 2LEDGE | hook | sinner | djump + dash
+		"Witch's Thicket 07 To Stockade 01"                    : lambda s : s.can_reach(el['Forest07Right'], 'Region', p) or s.can_reach(el['Forest07Left'], 'Region', p) and (s.has(el['dodge'], p) and (macros['LEDGE'](s) or s.has(el['dash'], p))) or macros['2LEDGE'](s) or s.has(el['hook'], p) or s.has(el['sinner'], p) or s.has(el['djump'], p) and s.has(el['dash'], p),
 #		                                                        Forest07Bottom | Forest07Left
 		"Witch's Thicket 07 To Witch's Thicket 08"             : lambda s : s.can_reach(el['Forest07Bottom'], 'Region', p) or s.can_reach(el['Forest07Left'], 'Region', p),
 #		                                                        Forest07Left | Forest07Bottom + LEDGE | Forest07Right + (LEDGE | hook | HORIZONTAL | dash)
@@ -1500,8 +1500,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Cliffside Hamlet 12 To Catacombs 01"                  : lambda s : s.can_reach(el['Village12Right'], 'Region', p) or s.can_reach(el['Village12Left1'], 'Region', p) and s.can_reach(el['Village12Top'], 'Region', p) and s.has(el['swim'], p),
 #		                                                        Village12Left2 | Village12Left1 + CHARGE
 		"Cliffside Hamlet 12 To Cliffside Hamlet 16"           : lambda s : s.can_reach(el['Village12Left2'], 'Region', p) or s.can_reach(el['Village12Left1'], 'Region', p) and macros['CHARGE'](s),
-#		                                                        Village13Right + (djump | 2LEDGE | LEDGE + HORIZONTAL)
-		"Cliffside Hamlet 13 - Amulet Gem"                     : lambda s : s.can_reach(el['Village13Right'], 'Region', p) and (s.has(el['djump'], p) or macros['2LEDGE'](s) or macros['LEDGE'](s) and macros['HORIZONTAL'](s)),
+#		                                                        Village13Right + 2LEDGE | LEDGE + (dash | HORIZONTAL)
+		"Cliffside Hamlet 13 - Amulet Gem"                     : lambda s : s.can_reach(el['Village13Right'], 'Region', p) and macros['2LEDGE'](s) or macros['LEDGE'](s) and (s.has(el['dash'], p) or macros['HORIZONTAL'](s)),
 #		                                                        Village13Right
 		"Cliffside Hamlet 13 - Chain of Sorcery"               : lambda s : s.can_reach(el['Village13Right'], 'Region', p),
 #		                                                        Village13Left + swim
