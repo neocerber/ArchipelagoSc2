@@ -100,10 +100,10 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Ruined Castle 03 - Stagnant Blight x30"               : lambda s : (s.can_reach(el['Castle03Top1'], 'Region', p) or s.can_reach(el['Castle03Top2'], 'Region', p)) and (s.has(el['hook'], p) or s.has(el['claw'], p) or macros['LEDGE'](s) and macros['HORIZONTAL'](s)),
 #		                                                        Castle03Bottom | Castle03Top1 | Castle03Top2
 		"Ruined Castle 03 To Ruined Castle 05"                 : lambda s : s.can_reach(el['Castle03Bottom'], 'Region', p) or s.can_reach(el['Castle03Top1'], 'Region', p) or s.can_reach(el['Castle03Top2'], 'Region', p),
-#		                                                        Castle03Top1 + claw
-		"Ruined Castle 03 To Ruined Castle 11 Left"            : lambda s : s.can_reach(el['Castle03Top1'], 'Region', p) and s.has(el['claw'], p),
-#		                                                        Castle03Top2 + claw
-		"Ruined Castle 03 To Ruined Castle 11 Right"           : lambda s : s.can_reach(el['Castle03Top2'], 'Region', p) and s.has(el['claw'], p),
+#		                                                        (Castle03Top1 + claw + HORIZONTAL + 2LEDGE) | (Castle03Bottom + claw + (2HORIZONTAL + 2LEDGE | HORIZONTAL + 3LEDGE))
+		"Ruined Castle 03 To Ruined Castle 11 Left"            : lambda s : (s.can_reach(el['Castle03Top1'], 'Region', p) and s.has(el['claw'], p) and macros['HORIZONTAL'](s) and macros['2LEDGE'](s)) or (s.can_reach(el['Castle03Bottom'], 'Region', p) and s.has(el['claw'], p) and (macros['2HORIZONTAL'](s) and macros['2LEDGE'](s)) and (macros['HORIZONTAL'](s) and macros['3LEDGE'](s))),
+#		                                                        (Castle03Top2 + claw + HORIZONTAL + 2LEDGE) | (Castle03Bottom + claw + (2HORIZONTAL + 2LEDGE | HORIZONTAL + 3LEDGE))
+		"Ruined Castle 03 To Ruined Castle 11 Right"           : lambda s : (s.can_reach(el['Castle03Top2'], 'Region', p) and s.has(el['claw'], p) and macros['HORIZONTAL'](s) and macros['2LEDGE'](s)) or (s.can_reach(el['Castle03Bottom'], 'Region', p) and s.has(el['claw'], p) and (macros['2HORIZONTAL'](s) and macros['2LEDGE'](s)) and (macros['HORIZONTAL'](s) and macros['3LEDGE'](s))),
 #		                                                        Castle04Top
 		"Ruined Castle 04 - Report from a Verboten Mage"       : lambda s : s.can_reach(el['Castle04Top'], 'Region', p),
 #		                                                        Castle04Top | RuinedCastleCellar + (LEDGE | claw)
@@ -382,8 +382,8 @@ def get_rules(p : int) -> Tuple[Dict[str, CollectionRule], Dict[str, ItemRule]]:
 		"Catacombs 11 To Catacombs 13"                         : lambda s : s.can_reach(el['Cave11Tip'], 'Location', p) and s.has(el['claw'], p),
 #		                                                        Cave11Right1 | Cave11Tip  + (hook | claw + (LEDGE | sinner | dodge + dash) | 2LEDGE | 2HORIZONTAL | LEDGE + HORIZONTAL)
 		"Catacombs 11 To Catacombs 18"                         : lambda s : s.can_reach(el['Cave11Right1'], 'Region', p) or s.can_reach(el['Cave11Tip'], 'Location', p) and (s.has(el['hook'], p) or s.has(el['claw'], p) and (macros['LEDGE'](s) or s.has(el['sinner'], p) or s.has(el['dodge'], p) and s.has(el['dash'], p)) or macros['2LEDGE'](s) or macros['2HORIZONTAL'](s) or macros['LEDGE'](s) and macros['HORIZONTAL'](s)),
-#		                                                        Cave12Right
-		"Catacombs 12 - Stone Tablet Fragment"                 : lambda s : s.can_reach(el['Cave12Right'], 'Region', p),
+#		                                                        Cave12Right + (champion | silva)
+		"Catacombs 12 - Stone Tablet Fragment"                 : lambda s : s.can_reach(el['Cave12Right'], 'Region', p) and (s.has(el['silva'], p) or s.has(el['champion'], p)),
 #		                                                        Cave12Right
 		"Catacombs 12 To Catacombs 04"                         : lambda s : s.can_reach(el['Cave12Right'], 'Region', p),
 #		                                                        Cave13Top | Cave13Left | Cave13Right | Cave13Bottom
