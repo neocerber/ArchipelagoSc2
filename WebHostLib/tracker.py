@@ -6,6 +6,9 @@ from uuid import UUID
 from flask import render_template
 from werkzeug.exceptions import abort
 
+from jinja2 import Environment, FileSystemLoader  
+import base64
+
 from MultiServer import Context, get_saving_second
 from NetUtils import ClientStatus, Hint, NetworkItem, NetworkSlot, SlotType
 from Utils import restricted_loads
@@ -1942,6 +1945,27 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
         checks_in_area['Total'] = sum(checks_in_area.values())
 
         lookup_any_item_id_to_name = tracker_data.item_id_to_name["Starcraft 2 Wings of Liberty"]
+        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+        env = Environment(loader=FileSystemLoader("worlds/sc2wol/tracker/"))
+        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        gTempalte = env.get_template("global.html")
+        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        trackerSc2 = gTempalte.render(inventory=inventory,
+            icons=icons,
+            acquired_items={lookup_any_item_id_to_name[id] for id, count in inventory.items() if count > 0},
+            player=player,
+            team=team,
+            room=tracker_data.room,
+            player_name=tracker_data.get_player_name(team, player),
+            checks_done=checks_done,
+            checks_in_area=checks_in_area,
+            location_info=location_info,
+            **display_data,)
+        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        with open("WebHostLib/templates/tracker__Starcraft2WingsOfLiberty.html", mode="w", encoding="utf-8") as output:
+            output.write(trackerSc2)
+
         return render_template(
             "tracker__Starcraft2WingsOfLiberty.html",
             inventory=inventory,
