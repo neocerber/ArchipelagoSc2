@@ -1544,21 +1544,21 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
             "Starting Vespene":                            "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/icons/icon-gas-terran.png",
             "Starting Supply":                             "https://static.wikia.nocookie.net/starcraft/images/d/d3/TerranSupply_SC2_Icon1.gif",
 
-            "Infantry Weapons Level 1":                    "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryweaponslevel1.png",
-            "Infantry Weapons Level 2":                    "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryweaponslevel2.png",
-            "Infantry Weapons Level 3":                    "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryweaponslevel3.png",
+            "Infantry Weapon Level 1":                    "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryweaponslevel1.png",
+            "Infantry Weapon Level 2":                    "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryweaponslevel2.png",
+            "Infantry Weapon Level 3":                    "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryweaponslevel3.png",
             "Infantry Armor Level 1":                      "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryarmorlevel1.png",
             "Infantry Armor Level 2":                      "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryarmorlevel2.png",
             "Infantry Armor Level 3":                      "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-infantryarmorlevel3.png",
-            "Vehicle Weapons Level 1":                     "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleweaponslevel1.png",
-            "Vehicle Weapons Level 2":                     "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleweaponslevel2.png",
-            "Vehicle Weapons Level 3":                     "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleweaponslevel3.png",
+            "Vehicle Weapon Level 1":                     "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleweaponslevel1.png",
+            "Vehicle Weapon Level 2":                     "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleweaponslevel2.png",
+            "Vehicle Weapon Level 3":                     "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleweaponslevel3.png",
             "Vehicle Armor Level 1":                       "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleplatinglevel1.png",
             "Vehicle Armor Level 2":                       "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleplatinglevel2.png",
             "Vehicle Armor Level 3":                       "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-vehicleplatinglevel3.png",
-            "Ship Weapons Level 1":                        "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipweaponslevel1.png",
-            "Ship Weapons Level 2":                        "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipweaponslevel2.png",
-            "Ship Weapons Level 3":                        "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipweaponslevel3.png",
+            "Ship Weapon Level 1":                        "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipweaponslevel1.png",
+            "Ship Weapon Level 2":                        "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipweaponslevel2.png",
+            "Ship Weapon Level 3":                        "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipweaponslevel3.png",
             "Ship Armor Level 1":                          "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipplatinglevel1.png",
             "Ship Armor Level 2":                          "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipplatinglevel2.png",
             "Ship Armor Level 3":                          "https://sclegacy.com/images/uploaded/starcraftii_beta/gamefiles/upgrades/btn-upgrade-terran-shipplatinglevel3.png",
@@ -1866,50 +1866,59 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
             "Progressive Regenerative Bio-Steel":             617 + SC2WOL_ITEM_ID_OFFSET
         }
         progressive_names = {
-            "Progressive Infantry Weapon":                    ["Infantry Weapons Level 1", "Infantry Weapons Level 1",
-                                                               "Infantry Weapons Level 2", "Infantry Weapons Level 3"],
-            "Progressive Infantry Armor":                     ["Infantry Armor Level 1", "Infantry Armor Level 1",
+            "Progressive Infantry Weapon":                    ["Infantry Weapon Level 1",
+                                                               "Infantry Weapon Level 2", "Infantry Weapon Level 3"],
+            "Progressive Infantry Armor":                     ["Infantry Armor Level 1",
                                                                "Infantry Armor Level 2", "Infantry Armor Level 3"],
-            "Progressive Vehicle Weapon":                     ["Vehicle Weapons Level 1", "Vehicle Weapons Level 1",
-                                                               "Vehicle Weapons Level 2", "Vehicle Weapons Level 3"],
-            "Progressive Vehicle Armor":                      ["Vehicle Armor Level 1", "Vehicle Armor Level 1",
+            "Progressive Vehicle Weapon":                     ["Vehicle Weapon Level 1",
+                                                               "Vehicle Weapon Level 2", "Vehicle Weapon Level 3"],
+            "Progressive Vehicle Armor":                      ["Vehicle Armor Level 1",
                                                                "Vehicle Armor Level 2", "Vehicle Armor Level 3"],
-            "Progressive Ship Weapon":                        ["Ship Weapons Level 1", "Ship Weapons Level 1",
-                                                               "Ship Weapons Level 2", "Ship Weapons Level 3"],
-            "Progressive Ship Armor":                         ["Ship Armor Level 1", "Ship Armor Level 1",
+            "Progressive Ship Weapon":                        ["Ship Weapon Level 1",
+                                                               "Ship Weapon Level 2", "Ship Weapon Level 3"],
+            "Progressive Ship Armor":                         ["Ship Armor Level 1",
                                                                "Ship Armor Level 2", "Ship Armor Level 3"],
-            "Progressive Stimpack (Marine)":                  ["Stimpack (Marine)", "Stimpack (Marine)",
+            "Progressive Stimpack (Marine)":                  ["Stimpack (Marine)", 
                                                                "Super Stimpack (Marine)"],
-            "Progressive Stimpack (Firebat)":                 ["Stimpack (Firebat)", "Stimpack (Firebat)",
+            "Progressive Stimpack (Firebat)":                 ["Stimpack (Firebat)", 
                                                                "Super Stimpack (Firebat)"],
-            "Progressive Stimpack (Marauder)":                ["Stimpack (Marauder)", "Stimpack (Marauder)",
+            "Progressive Stimpack (Marauder)":                ["Stimpack (Marauder)", 
                                                                "Super Stimpack (Marauder)"],
-            "Progressive Stimpack (Reaper)":                  ["Stimpack (Reaper)", "Stimpack (Reaper)",
+            "Progressive Stimpack (Reaper)":                  ["Stimpack (Reaper)", 
                                                                "Super Stimpack (Reaper)"],
-            "Progressive Stimpack (Hellion)":                 ["Stimpack (Hellion)", "Stimpack (Hellion)",
+            "Progressive Stimpack (Hellion)":                 ["Stimpack (Hellion)", 
                                                                "Super Stimpack (Hellion)"],
-            "Progressive High Impact Payload (Thor)":         ["High Impact Payload (Thor)",
-                                                               "High Impact Payload (Thor)", "Smart Servos (Thor)"],
+            "Progressive High Impact Payload (Thor)":         ["High Impact Payload (Thor)", "Smart Servos (Thor)"],
             "Progressive Cross-Spectrum Dampeners (Banshee)": ["Cross-Spectrum Dampeners (Banshee)",
-                                                               "Cross-Spectrum Dampeners (Banshee)",
                                                                "Advanced Cross-Spectrum Dampeners (Banshee)"],
             "Progressive Regenerative Bio-Steel":             ["Regenerative Bio-Steel Level 1",
-                                                               "Regenerative Bio-Steel Level 1",
                                                                "Regenerative Bio-Steel Level 2"]
         }
+        progItemInfo = {}
         for item_name, item_id in progressive_items.items():
-            level = min(inventory[item_id], len(progressive_names[item_name]) - 1)
-            display_name = progressive_names[item_name][level]
+            level = min(inventory[item_id], len(progressive_names[item_name]))
+            display_name = progressive_names[item_name][max(0, level - 1)]
             base_name = (item_name.split(maxsplit=1)[1].lower()
                          .replace(' ', '_')
                          .replace("-", "")
                          .replace("(", "")
                          .replace(")", ""))
+            # print("toto ", item_name, item_id)
             display_data[base_name + "_level"] = level
             display_data[base_name + "_url"] = icons[display_name]
             display_data[base_name + "_name"] = display_name
+            progItemInfo[base_name] = {}
+            progItemInfo[base_name]["url"] = icons[display_name]
+            if "Level" in display_name:
+                progItemInfo[base_name]["name"] = "Progressive " + display_name.split(" Level")[0]
+                progItemInfo[base_name]["level"] = level
+            else:
+                progItemInfo[base_name]["specificName"] = display_name
+                progItemInfo[base_name]["name"] = item_name
+                # print("toto ", item_name, progItemInfo[base_name]["specificName"])
 
         # Multi-items
+        stackItemInfo = {}
         multi_items = {
             "+15 Starting Minerals": 800 + SC2WOL_ITEM_ID_OFFSET,
             "+15 Starting Vespene":  801 + SC2WOL_ITEM_ID_OFFSET,
@@ -1918,12 +1927,17 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
         for item_name, item_id in multi_items.items():
             base_name = item_name.split()[-1].lower()
             count = inventory[item_id]
+            stackItemInfo[item_name] = {}
+            stackItemInfo[item_name]["specificName"] = item_name.split(" ", 1)[1]
+            stackItemInfo[item_name]["icon"] = icons[item_name.split(" ", 1)[1]]
             if base_name == "supply":
                 count = count * 2
                 display_data[base_name + "_count"] = count
+                stackItemInfo[item_name]["count"] = count
             else:
                 count = count * 15
                 display_data[base_name + "_count"] = count
+                stackItemInfo[item_name]["count"] = count
 
         # Victory condition
         game_state = tracker_data.get_player_client_status(team, player)
@@ -1948,51 +1962,36 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
 
         env = Environment(loader=FileSystemLoader("worlds/sc2wol/tracker/"))
         gTempalte = env.get_template("global.html")
-        uTemplate = env.get_template("basic.html")
+        singleItemTemplate = env.get_template("basic.html")
+        progItemTemplate = env.get_template("progressiveItem.html")
+        progItemWithSpecificNameTemplate = env.get_template("progressiveItemWithSpecificName.html")
+        stackItemTemplate = env.get_template("stackItem.html")
 
-        itemHtml = {}
+        basicItemHtml = {}
         for cName in icons:
-            itemHtml[cName] = uTemplate.render(icon=icons[cName], \
-                                                name=cName)
-            
-        # unitDict = {}
-        # for cIcon in icons:
-        #     if "(" in cIcon:
-        #         parentName = cIcon.split("(")[-1].split(")")[0]
-        #         if parentName not in unitDict:
-        #             unitDict[parentName] = [cIcon]
-        #         else:
-        #             if len(unitDict[parentName]) == 0:
-        #                 unitDict[parentName] = [cIcon]
-        #             else:
-        #                 unitDict[parentName].append(cIcon)
-        #     else: 
-        #         unitDict[cIcon] = []
+            # doing also progressive, i guess? stop that 
+            basicItemHtml[cName] = singleItemTemplate.render(icon=icons[cName], \
+                                                             name=cName)
+        stackItemHtml = {}
+        for cItem in stackItemInfo:
+            stackItemHtml[cItem] = stackItemTemplate.render(name=cItem, \
+                                     specificName=stackItemInfo[cItem]["specificName"],
+                                     icon=stackItemInfo[cItem]["icon"],
+                                     count=stackItemInfo[cItem]["count"])
+        progressiveItemHtml = {}
+        for cItem in progItemInfo:
+            if "level" in progItemInfo[cItem]:
+                progressiveItemHtml[cItem] = progItemTemplate.render(\
+                    icon=progItemInfo[cItem]["url"], name=progItemInfo[cItem]["name"], \
+                    level=progItemInfo[cItem]["level"])
+            else:
+                progressiveItemHtml[cItem] = progItemWithSpecificNameTemplate.render(\
+                    icon=progItemInfo[cItem]["url"], name=progItemInfo[cItem]["name"], \
+                    specificName=progItemInfo[cItem]["specificName"])
 
-        # unitHtml = {}
-        # for cUnit in unitDict:
-        #     if cUnit not in icons:
-        #         cUnitInfo = {}
-        #     else:
-        #         cUnitInfo = {cUnit: icons[cUnit]}
-        #     cUpgradesInfo = {}
-        #     for cUnitUp in unitDict[cUnit]:
-        #         cUpgradesInfo[cUnitUp] = icons[cUnitUp]
-        #     unitHtml[cUnit] = uTemplate.render(unit=cUnitInfo, \
-        #                                         upgrades=cUpgradesInfo)
-        # print(unitHtml["Hercules"])
-        # print(unitHtml["SCV"])
-        # print(unitHtml)
-        # Starships = ["Medivac"]
-        # StarshipsHtml = [unitHtml["Medivac"]]
-        # print(StarshipsHtml)
-
-        # trackerSc2 = gTempalte.render(icons=icons,
-        #     Starships=StarshipsHtml,
-        #     **display_data,)
-
-        trackerSc2 = gTempalte.render(icons=icons,
-            item=itemHtml,
+        trackerSc2 = gTempalte.render(basicItem=basicItemHtml,
+            progressiveItem=progressiveItemHtml,
+            stackItem=stackItemHtml,
             **display_data,)
         with open("WebHostLib/templates/tracker__Starcraft2WingsOfLiberty.html", mode="w", encoding="utf-8") as output:
             output.write(trackerSc2)
@@ -2000,7 +1999,6 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
         return render_template(
             "tracker__Starcraft2WingsOfLiberty.html",
             inventory=inventory,
-            icons=icons,
             acquired_items={lookup_any_item_id_to_name[id] for id, count in inventory.items() if count > 0},
             player=player,
             team=team,
