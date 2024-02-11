@@ -1948,41 +1948,51 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
 
         env = Environment(loader=FileSystemLoader("worlds/sc2wol/tracker/"))
         gTempalte = env.get_template("global.html")
-        uTemplate = env.get_template("unit.html")
-        unitDict = {}
-        for cIcon in icons:
-            if "(" in cIcon:
-                parentName = cIcon.split("(")[-1].split(")")[0]
-                if parentName not in unitDict:
-                    unitDict[parentName] = [cIcon]
-                else:
-                    if len(unitDict[parentName]) == 0:
-                        unitDict[parentName] = [cIcon]
-                    else:
-                        unitDict[parentName].append(cIcon)
-            else: 
-                unitDict[cIcon] = []
+        uTemplate = env.get_template("basic.html")
 
-        unitHtml = {}
-        for cUnit in unitDict:
-            if cUnit not in icons:
-                cUnitInfo = {}
-            else:
-                cUnitInfo = {cUnit: icons[cUnit]}
-            cUpgradesInfo = {}
-            for cUnitUp in unitDict[cUnit]:
-                cUpgradesInfo[cUnitUp] = icons[cUnitUp]
-            unitHtml[cUnit] = uTemplate.render(unit=cUnitInfo, \
-                                                upgrades=cUpgradesInfo)
+        itemHtml = {}
+        for cName in icons:
+            itemHtml[cName] = uTemplate.render(icon=icons[cName], \
+                                                name=cName)
+            
+        # unitDict = {}
+        # for cIcon in icons:
+        #     if "(" in cIcon:
+        #         parentName = cIcon.split("(")[-1].split(")")[0]
+        #         if parentName not in unitDict:
+        #             unitDict[parentName] = [cIcon]
+        #         else:
+        #             if len(unitDict[parentName]) == 0:
+        #                 unitDict[parentName] = [cIcon]
+        #             else:
+        #                 unitDict[parentName].append(cIcon)
+        #     else: 
+        #         unitDict[cIcon] = []
+
+        # unitHtml = {}
+        # for cUnit in unitDict:
+        #     if cUnit not in icons:
+        #         cUnitInfo = {}
+        #     else:
+        #         cUnitInfo = {cUnit: icons[cUnit]}
+        #     cUpgradesInfo = {}
+        #     for cUnitUp in unitDict[cUnit]:
+        #         cUpgradesInfo[cUnitUp] = icons[cUnitUp]
+        #     unitHtml[cUnit] = uTemplate.render(unit=cUnitInfo, \
+        #                                         upgrades=cUpgradesInfo)
         # print(unitHtml["Hercules"])
         # print(unitHtml["SCV"])
         # print(unitHtml)
-        Starships = ["Medivac"]
-        StarshipsHtml = [unitHtml["Medivac"]]
+        # Starships = ["Medivac"]
+        # StarshipsHtml = [unitHtml["Medivac"]]
         # print(StarshipsHtml)
 
+        # trackerSc2 = gTempalte.render(icons=icons,
+        #     Starships=StarshipsHtml,
+        #     **display_data,)
+
         trackerSc2 = gTempalte.render(icons=icons,
-            Starships=StarshipsHtml,
+            item=itemHtml,
             **display_data,)
         with open("WebHostLib/templates/tracker__Starcraft2WingsOfLiberty.html", mode="w", encoding="utf-8") as output:
             output.write(trackerSc2)
