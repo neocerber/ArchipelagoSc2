@@ -1945,24 +1945,45 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
         checks_in_area['Total'] = sum(checks_in_area.values())
 
         lookup_any_item_id_to_name = tracker_data.item_id_to_name["Starcraft 2 Wings of Liberty"]
-        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
         env = Environment(loader=FileSystemLoader("worlds/sc2wol/tracker/"))
-        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         gTempalte = env.get_template("global.html")
-        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        trackerSc2 = gTempalte.render(inventory=inventory,
-            icons=icons,
-            acquired_items={lookup_any_item_id_to_name[id] for id, count in inventory.items() if count > 0},
-            player=player,
-            team=team,
-            room=tracker_data.room,
-            player_name=tracker_data.get_player_name(team, player),
-            checks_done=checks_done,
-            checks_in_area=checks_in_area,
-            location_info=location_info,
+        uTemplate = env.get_template("unit.html")
+        unitDict = {}
+        for cIcon in icons:
+            if "(" in cIcon:
+                parentName = cIcon.split("(")[-1].split(")")[0]
+                if parentName not in unitDict:
+                    unitDict[parentName] = [cIcon]
+                else:
+                    if len(unitDict[parentName]) == 0:
+                        unitDict[parentName] = [cIcon]
+                    else:
+                        unitDict[parentName].append(cIcon)
+            else: 
+                unitDict[cIcon] = []
+
+        unitHtml = {}
+        for cUnit in unitDict:
+            if cUnit not in icons:
+                cUnitInfo = {}
+            else:
+                cUnitInfo = {cUnit: icons[cUnit]}
+            cUpgradesInfo = {}
+            for cUnitUp in unitDict[cUnit]:
+                cUpgradesInfo[cUnitUp] = icons[cUnitUp]
+            unitHtml[cUnit] = uTemplate.render(unit=cUnitInfo, \
+                                                upgrades=cUpgradesInfo)
+        # print(unitHtml["Hercules"])
+        # print(unitHtml["SCV"])
+        # print(unitHtml)
+        Starships = ["Medivac"]
+        StarshipsHtml = [unitHtml["Medivac"]]
+        # print(StarshipsHtml)
+
+        trackerSc2 = gTempalte.render(icons=icons,
+            Starships=StarshipsHtml,
             **display_data,)
-        print("dsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         with open("WebHostLib/templates/tracker__Starcraft2WingsOfLiberty.html", mode="w", encoding="utf-8") as output:
             output.write(trackerSc2)
 
