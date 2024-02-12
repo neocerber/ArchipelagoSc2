@@ -1996,6 +1996,7 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
         with open("WebHostLib/templates/tracker__Starcraft2WingsOfLiberty.html", \
                   mode="w", encoding="utf-8") as output:
             output.write(trackerSc2)
+        # asd change var name of ap style
 
         return render_template(
             "tracker__Starcraft2WingsOfLiberty.html",
