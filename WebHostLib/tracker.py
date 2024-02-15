@@ -1988,7 +1988,7 @@ if "Starcraft 2 Wings of Liberty" in network_data_package["games"]:
                 alone_item_html[c_name] = single_item_template.render(icon=icons[c_name], \
                                                                  ap_name=c_name)
 
-        item_html = alone_item_html | prog_item_html | stack_item_html
+        item_html = (alone_item_html | prog_item_html) | stack_item_html
         tracker_sc2 = general_template.render(item=item_html,)
         # asd find a way to not write?
         with open("WebHostLib/templates/tracker__Starcraft2WingsOfLiberty.html", \
