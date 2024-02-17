@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ '{{' }} player_name }}&apos;s Tracker</title>
+    <link rel="stylesheet" type="text/css" href="{{ '{{' }} url_for('static', filename='styles/sc2wolTracker.css') }}"/>
+    <script type="application/ecmascript" src="{{ '{{' }} url_for('static', filename='assets/sc2wolTracker.js') }}"></script>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/jura" type="text/css"/>
+</head>
+
+<body>
+    {# TODO: Replace this with a proper wrapper for each tracker when developing TrackerAPI. #}
+    <div style="margin-bottom: 0.5rem">
+        <a href="{{ '{{' }} url_for("get_generic_game_tracker", tracker=room.tracker, tracked_team=team, tracked_player=player) }}">Switch To Generic Tracker</a>
+    </div>
+
+    <div id="player-tracker-wrapper" data-tracker="{{ '{{' }} room.tracker|suuid }}">
+        <table id="inventory-table">
+            <tr>
+                <td colspan="15" class="title">
+                    Starting Resources
+                </td>
+            </tr>
+            <tr>
+                {{item["+15 Starting Minerals"]}}
+                {{item["+15 Starting Vespene"]}}
+                <!--
+                {{item["Starting Supply"]}}
+                -->
+            </tr>
+            <tr>
+                <td colspan="15" class="title">
+                    Weapon & Armor Upgrades
+                </td>
+            </tr>
+            <tr>
+                {{item["Progressive Infantry Weapon"]}}
+                {{item["Progressive Infantry Armor"]}}
+                {{item["Progressive Vehicle Weapon"]}}
+                {{item["Progressive Vehicle Armor"]}}
+                {{item["Progressive Ship Weapon"]}}
+                {{item["Progressive Ship Armor"]}}
+                <td colspan="2"></td>
+                {{item["Ultra-Capacitors"]}}
+                {{item["Vanadium Plating"]}}
+            </tr>
+            <tr>
+                <td colspan="15" class="title">
+                    Base
+                </td>
+            </tr>
+            <tr>
+                {{item["Bunker"]}}
+                {{item["Projectile Accelerator (Bunker)"]}}
+                {{item["Neosteel Bunker (Bunker)"]}}
+                {{item["Shrike Turret (Bunker)"]}}
+                {{item["Fortified Bunker (Bunker)"]}}
+                <td colspan="3"></td>
+                {{item["Missile Turret"]}}
+                {{item["Titanium Housing (Missile Turret)"]}}
+                {{item["Hellstorm Batteries (Missile Turret)"]}}
+            </tr>
+            <tr>
+                {{item["Orbital Command (Building)"]}}
+                {{item["Command Center Reactor"]}}
+                {{item["Planetary Fortress"]}}
+                <td></td>
+                {{item["Advanced Construction (SCV)"]}}
+                {{item["Dual-Fusion Welders (SCV)"]}}
+                <td></td>
+                {{item["Micro-Filtering"]}}
+                {{item["Automated Refinery"]}}
+                <td></td>
+                {{item["Tech Reactor"]}}
+                <td></td>
+                {{item["Orbital Depots"]}}
+            </tr>
+            <tr>
+                {{item["Sensor Tower"]}}
+                <td></td>
+                {{item["Perdition Turret"]}}
+                <td></td>
+                {{item["Hive Mind Emulator"]}}
+                <td></td>
+                {{item["Psi Disrupter"]}}
+            </tr>
+            <tr>
+                <td colspan="7" class="title">
+                    Infantry
+                </td>
+                <td></td>
+                <td colspan="7" class="title">
+                    Vehicles
+                </td>
+            </tr>
+            <tr>
+                {{item["Marine"]}}
+                {{item["Progressive Stimpack (Marine)"]}}
+                {{item["Combat Shield (Marine)"]}}
+                {{item["Laser Targeting System (Marine)"]}}
+                {{item["Magrail Munitions (Marine)"]}}
+                {{item["Optimized Logistics (Marine)"]}}
+                <td colspan="2"></td>
+                {{item["Hellion"]}}
+                {{item["Twin-Linked Flamethrower (Hellion)"]}}
+                {{item["Thermite Filaments (Hellion)"]}}
+                {{item["Hellbat Aspect (Hellion)"]}}
+                {{item["Smart Servos (Hellion)"]}}
+                {{item["Optimized Logistics (Hellion)"]}}
+                {{item["Jump Jets (Hellion)"]}}
+            </tr>
+            <tr>
+                {{item["Medic"]}}
+                {{item["Advanced Medic Facilities (Medic)"]}}
+                {{item["Stabilizer Medpacks (Medic)"]}}
+                {{item["Restoration (Medic)"]}}
+                {{item["Optical Flare (Medic)"]}}
+                {{item["Optimized Logistics (Medic)"]}}
+                <td colspan="2"></td>
+                <td></td>
+                {{item["Progressive Stimpack (Hellion)"]}}
+            </tr>
+            <tr>
+                {{item["Firebat"]}}
+                {{item["Incinerator Gauntlets (Firebat)"]}}
+                {{item["Juggernaut Plating (Firebat)"]}}
+                {{item["Progressive Stimpack (Firebat)"]}}
+                {{item["Optimized Logistics (Firebat)"]}}
+                <td colspan="3"></td>
+                {{item["Vulture"]}}
+                {{item["Replenishable Magazine (Vulture)"]}}
+                {{item["Ion Thrusters (Vulture)"]}}
+                {{item["Auto Launchers (Vulture)"]}}
+                <td></td>
+                {{item["Cerberus Mine (Spider Mine)"]}}
+                {{item["High Explosive Munition (Spider Mine)"]}}
+            </tr>
+            <tr>
+                {{item["Marauder"]}}
+                {{item["Concussive Shells (Marauder)"]}}
+                {{item["Kinetic Foam (Marauder)"]}}
+                {{item["Progressive Stimpack (Marauder)"]}}
+                {{item["Laser Targeting System (Marauder)"]}}
+                {{item["Magrail Munitions (Marauder)"]}}
+                {{item["Internal Tech Module (Marauder)"]}}
+                <td></td>
+                {{item["Goliath"]}}
+                {{item["Multi-Lock Weapons System (Goliath)"]}}
+                {{item["Ares-Class Targeting System (Goliath)"]}}
+                {{item["Jump Jets (Goliath)"]}}
+                {{item["Optimized Logistics (Goliath)"]}}
+            </tr>
+            <tr>
+                {{item["Reaper"]}}
+                {{item["U-238 Rounds (Reaper)"]}}
+                {{item["G-4 Clusterbomb (Reaper)"]}}
+                {{item["Progressive Stimpack (Reaper)"]}}
+                {{item["Laser Targeting System (Reaper)"]}}
+                {{item["Advanced Cloaking Field (Reaper)"]}}
+                {{item["Spider Mines (Reaper)"]}}
+                <td></td>
+                {{item["Diamondback"]}}
+                {{item["Tri-Lithium Power Cell (Diamondback)"]}}
+                {{item["Shaped Hull (Diamondback)"]}}
+                {{item["Hyperfluxor (Diamondback)"]}}
+                {{item["Burst Capacitors (Diamondback)"]}}
+                {{item["Optimized Logistics (Diamondback)"]}}
+            </tr>
+            <tr>
+                <td></td>
+                {{item["Combat Drugs (Reaper)"]}}
+                <td colspan="6"></td>
+                {{item["Siege Tank"]}}
+                {{item["Maelstrom Rounds (Siege Tank)"]}}
+                {{item["Shaped Blast (Siege Tank)"]}}
+                {{item["Jump Jets (Siege Tank)"]}}
+                {{item["Spider Mines (Siege Tank)"]}}
+                {{item["Smart Servos (Siege Tank)"]}}
+                {{item["Graduating Range (Siege Tank)"]}}
+            </tr>
+            <tr>
+                {{item["Ghost"]}}
+                {{item["Ocular Implants (Ghost)"]}}
+                {{item["Crius Suit (Ghost)"]}}
+                {{item["EMP Rounds (Ghost)"]}}
+                {{item["Lockdown (Ghost)"]}}
+                <td colspan="3"></td>
+                <td></td>
+                {{item["Laser Targeting System (Siege Tank)"]}}
+                {{item["Advanced Siege Tech (Siege Tank)"]}}
+                {{item["Internal Tech Module (Siege Tank)"]}}
+            </tr>
+            <tr>
+                {{item["Spectre"]}}
+                {{item["Psionic Lash (Spectre)"]}}
+                {{item["Nyx-Class Cloaking Module (Spectre)"]}}
+                {{item["Impaler Rounds (Spectre)"]}}
+                <td colspan="4"></td>
+                {{item["Thor"]}}
+                {{item["330mm Barrage Cannon (Thor)"]}}
+                {{item["Immortality Protocol (Thor)"]}}
+                {{item["Progressive High Impact Payload (Thor)"]}}
+            </tr>
+            <tr>
+                <td colspan="8"></td>
+                {{item["Predator"]}}
+                {{item["Optimized Logistics (Predator)"]}}
+            </tr>
+            <tr>
+                <td colspan="8"></td>
+                {{item["Widow Mine"]}}
+                {{item["Drilling Claws (Widow Mine)"]}}
+                {{item["Concealment (Widow Mine)"]}}
+                {{item["Black Market Launchers (Widow Mine)"]}}
+                {{item["Executioner Missiles (Widow Mine)"]}}
+            </tr>
+            <tr>
+                <td colspan="8"></td>
+                {{item["Cyclone"]}}
+                {{item["Mag-Field Accelerators (Cyclone)"]}}
+                {{item["Mag-Field Launchers (Cyclone)"]}}
+                {{item["Targeting Optics (Cyclone)"]}}
+                {{item["Rapid Fire Launchers (Cyclone)"]}}
+            </tr>
+            <tr>
+                <td colspan="15" class="title">
+                    Starships 
+                </td>
+            </tr>
+            <tr>
+                {{item["Medivac"]}}
+                {{item["Rapid Deployment Tube (Medivac)"]}}
+                {{item["Advanced Healing AI (Medivac)"]}}
+                {{item["Expanded Hull (Medivac)"]}}
+                {{item["Afterburners (Medivac)"]}}
+                <td colspan="3"></td>
+                {{item["Raven"]}}
+                {{item["Bio Mechanical Repair Drone (Raven)"]}}
+                {{item["Spider Mines (Raven)"]}}
+                {{item["Railgun Turret (Raven)"]}}
+                {{item["Hunter-Seeker Weapon (Raven)"]}}
+                {{item["Interference Matrix (Raven)"]}}
+                {{item["Anti-Armor Missile (Raven)"]}}
+            </tr>
+            <tr>
+                {{item["Wraith"]}}
+                {{item["Tomahawk Power Cells (Wraith)"]}}
+                {{item["Displacement Field (Wraith)"]}}
+                {{item["Advanced Laser Technology (Wraith)"]}}
+                <td colspan="4"></td>
+                <td></td>
+                {{item["Internal Tech Module (Raven)"]}}
+            </tr>
+            <tr>
+                {{item["Viking"]}}
+                {{item["Ripwave Missiles (Viking)"]}}
+                {{item["Phobos-Class Weapons System (Viking)"]}}
+                {{item["Smart Servos (Viking)"]}}
+                {{item["Magrail Munitions (Viking)"]}}
+                <td colspan="3"></td>
+                {{item["Science Vessel"]}}
+                {{item["EMP Shockwave (Science Vessel)"]}}
+                {{item["Defensive Matrix (Science Vessel)"]}}
+            </tr>
+            <tr>
+                {{item["Banshee"]}}
+                {{item["Progressive Cross-Spectrum Dampeners (Banshee)"]}}
+                {{item["Shockwave Missile Battery (Banshee)"]}}
+                {{item["Hyperflight Rotors (Banshee)"]}}
+                {{item["Laser Targeting System (Banshee)"]}}
+                {{item["Internal Tech Module (Banshee)"]}}
+                <td colspan="2"></td>
+                {{item["Hercules"]}}
+            </tr>
+            <tr>
+                {{item["Battlecruiser"]}}
+                {{item["Missile Pods (Battlecruiser)"]}}
+                {{item["Defensive Matrix (Battlecruiser)"]}}
+                {{item["Tactical Jump (Battlecruiser)"]}}
+                {{item["Cloak (Battlecruiser)"]}}
+                {{item["ATX Laser Battery (Battlecruiser)"]}}
+                {{item["Optimized Logistics (Battlecruiser)"]}}
+                <td></td>
+                {{item["Liberator"]}}
+                {{item["Advanced Ballistics (Liberator)"]}}
+                {{item["Raid Artillery (Liberator)"]}}
+                {{item["Cloak (Liberator)"]}}
+                {{item["Laser Targeting System (Liberator)"]}}
+                {{item["Optimized Logistics (Liberator)"]}}
+            </tr>
+            <tr>
+                <td></td>
+                {{item["Internal Tech Module (Battlecruiser)"]}}
+                <td colspan="6"></td>
+                {{item["Valkyrie"]}}
+                {{item["Enhanced Cluster Launchers (Valkyrie)"]}}
+                {{item["Shaped Hull (Valkyrie)"]}}
+                {{item["Burst Lasers (Valkyrie)"]}}
+                {{item["Afterburners (Valkyrie)"]}}
+            </tr>
+            <tr>
+                <td colspan="15" class="title">
+                    Mercenaries
+                </td>
+            </tr>
+            <tr>
+                {{item["War Pigs"]}}
+                {{item["Devil Dogs"]}}
+                {{item["Hammer Securities"]}}
+                {{item["Spartan Company"]}}
+                {{item["Siege Breakers"]}}
+                {{item["Hel\\'s Angel"]}}
+                {{item["Dusk Wings"]}}
+                {{item["Jackson\\'s Revenge"]}}
+            </tr>
+            <tr>
+                <td colspan="15" class="title">
+                    General Upgrades
+                </td>
+            </tr>
+            <tr>
+                {{item["Fire-Suppression System (Building)"]}}
+                {{item["Orbital Strike"]}}
+                {{item["Cellular Reactor"]}}
+                {{item["Progressive Regenerative Bio-Steel"]}}
+            </tr>
+            <tr>
+                <td colspan="15" class="title">
+                    Protoss Units
+                </td>
+            </tr>
+            <tr>
+                {{item["Zealot"]}}
+                {{item["Stalker"]}}
+                {{item["High Templar"]}}
+                {{item["Dark Templar"]}}
+                {{item["Immortal"]}}
+                {{item["Colossus"]}}
+                {{item["Phoenix"]}}
+                {{item["Void Ray"]}}
+                {{item["Carrier"]}}
+            </tr>
+        </table>
+        <table id="location-table">
+            {{ '{%' }} for area in checks_in_area %}
+            {{ '{%' }} if checks_in_area[area] > 0 %}
+            <tr class="location-category" id="{{area}}-header">
+                <td>{{ '{{' }} area }} {{ '{{' }}'▼' if area != 'Total'}}</td>
+                <td class="counter">{{ '{{' }} checks_done[area] }} / {{ '{{' }} checks_in_area[area] }}</td>
+            </tr>
+            <tbody class="locations hide" id="{{ '{{' }}area}}">
+                {{ '{%' }} for location in location_info[area] %}
+                <tr>
+                    <td class="location-name">{{ '{{' }} location }}</td>
+                    <td class="counter">{{ '{{' }} '✔' if location_info[area][location] else '' }}</td>
+                </tr>
+                {{ '{%' }} endfor %}
+            </tbody>
+            {{ '{%' }} endif %}
+            {{ '{%' }} endfor %}
+        </table>
+    </div>
+</body>
+</html>
