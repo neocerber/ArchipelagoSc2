@@ -1,5 +1,5 @@
-from worlds.AutoWorld import World
-from BaseClasses import ItemClassification, Region, Item, Location, Type
+from worlds.AutoWorld import World, WebWorld
+from BaseClasses import ItemClassification, Region, Item, Location, Type, Tutorial
 from worlds.generic.Rules import set_rule, add_item_rule
 from typing import Any, Dict, List, Optional, TextIO, Union
 from Options import Option
@@ -14,6 +14,21 @@ from .Regions import regions as regions_list, entrances, indirect_connections
 from .EntranceRandomizer import EntranceRandomizer
 
 ENDERLILIES = "Ender Lilies"
+
+class EnderLiliesWeb(WebWorld):
+    setup_en = Tutorial(
+        "Multiworld Setup Tutorial",
+        "A guide to setting up the Ender Lilies randomizer connected to an Archipelago Multiworld.",
+        "English",
+        "setup_en.md",
+        "setup/en",
+        ["Neocerber", "Trex", "Lurch9229"]
+    )
+
+    theme = "partyTime"
+
+    tutorials = [setup_en]
+
 
 class EnderLiliesEvent(Item):
     game = ENDERLILIES
@@ -50,6 +65,7 @@ class EnderLiliesWorld(World):
     """
 
     game = ENDERLILIES
+    web = EnderLiliesWeb()
     option_definitions = options
     location_name_to_id = {name: data.address for name, data in locations.items()}
     item_name_to_id = {name: data.code for name, data in items.items()}
