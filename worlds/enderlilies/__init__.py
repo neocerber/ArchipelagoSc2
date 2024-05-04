@@ -81,7 +81,7 @@ class EnderLiliesWorld(World):
             maneuver_items = early_maneuver_opt.get_early_maneuver(
                                                       self.get_option(StartingLocation))
             if early_maneuver_opt.value == 1:
-                non_local_items = self.non_local_items.value
+                non_local_items = self.options.non_local_items.value
                 avail_local_maneuver = [item for item in maneuver_items 
                                           if item not in non_local_items]
                 item_name = self.random.choice(avail_local_maneuver)
