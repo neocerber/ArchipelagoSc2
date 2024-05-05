@@ -66,7 +66,9 @@ class EnderLiliesWorld(World):
 
     game = ENDERLILIES
     web = EnderLiliesWeb()
-    option_definitions = options
+    # option_definitions = options
+    options_dataclass = EnderLiliesGameOptions
+    options: EnderLiliesGameOptions
     location_name_to_id = {name: data.address for name, data in locations.items()}
     item_name_to_id = {name: data.code for name, data in items.items()}
     
@@ -79,13 +81,13 @@ class EnderLiliesWorld(World):
             maneuver_items = early_maneuver_opt.get_early_maneuver(
                                                       self.get_option(StartingLocation))
             if early_maneuver_opt.value == 1:
-                non_local_items = self.multiworld.non_local_items[self.player].value
+                non_local_items = self.options.non_local_items.value
                 avail_local_maneuver = [item for item in maneuver_items 
                                           if item not in non_local_items]
-                item_name = self.multiworld.random.choice(avail_local_maneuver)
+                item_name = self.random.choice(avail_local_maneuver)
                 self.multiworld.local_early_items[self.player][item_name] = 1
             elif early_maneuver_opt.value == 2:
-                item_name = self.multiworld.random.choice(maneuver_items)
+                item_name = self.random.choice(maneuver_items)
                 self.multiworld.early_items[self.player][item_name] = 1
 
     def create_item(self, item: str) -> EnderLiliesItem:
@@ -105,7 +107,7 @@ class EnderLiliesWorld(World):
             for i in range(data.count):
                 pool.append(self.create_item(item))
         unfilled_location = self.multiworld.get_unfilled_locations(self.player)
-        self.multiworld.random.shuffle(pool)
+        self.random.shuffle(pool)
         pool : List[EnderLiliesItem] = self.get_option(ItemPoolPriority).sort_items_list(pool, len(unfilled_location))
 
         if self.get_option(StoneTabletsPlacement).value == StoneTabletsPlacement.option_region:
@@ -124,7 +126,7 @@ class EnderLiliesWorld(World):
         if self.get_option(RandomizeEntrances):
             er = EntranceRandomizer(starting_location)
             portals = er.get_portals()
-            self.multiworld.random.shuffle(portals)
+            self.random.shuffle(portals)
             self.randomized_entrances = er.Randomize(portals)
         connections : List[Tuple[Region, str, str]] = []
 
@@ -175,7 +177,7 @@ class EnderLiliesWorld(World):
             tablets_locations : List[Location]  = self.multiworld.find_item_locations(el["tablet"], self.player)
             tablet : EnderLiliesItem = tablets_locations[0].item
             valid_locations : List[Location]  = [location for location in self.multiworld.get_locations(self.player) if not location.locked and location.can_fill(self.multiworld.state, tablet) and location.item == None or not location.item.advancement]
-            self.multiworld.random.shuffle(valid_locations)
+            self.random.shuffle(valid_locations)
             swaps : List[Tuple[Location, Location]] = StoneTabletsPlacement.place_tablets_in_regions(tablets_locations, valid_locations)
             for swap in swaps:
                 swap_location_item(swap[0], swap[1], True)
@@ -245,11 +247,11 @@ class EnderLiliesWorld(World):
         return slot_data
 
     def get_option(self, option: Union[str, Type[Option]]) -> Option:
-        if self.multiworld is None:
-            return option.default
+        # if self.multiworld is None:
+        #     return option.default
         if isinstance(option, str):
-            return self.multiworld.__getattribute__(option)[self.player]
-        return self.multiworld.__getattribute__(option.name)[self.player]
+            return self.options.__getattribute__(option)
+        return self.options.__getattribute__(option.name)
 
     def get_filler_item_name(self) -> str:
         return "nothing"
@@ -257,7 +259,7 @@ class EnderLiliesWorld(World):
     def assign_starting_items(self) -> List[str]:
         weapon_name = self.get_option(StartingSpirit).get_starting_weapon_pool()
         if isinstance(weapon_name, list):
-            weapon_name = self.multiworld.random.choice(weapon_name)
+            weapon_name = self.random.choice(weapon_name)
         starting_weapon = self.create_item(weapon_name)
         self.multiworld.get_location("Starting Spirit", self.player).place_locked_item(starting_weapon)
         return [weapon_name]
