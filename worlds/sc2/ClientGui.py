@@ -180,28 +180,34 @@ class SC2Manager(GameManager):
                                 text = f"[color=FFFFFF]{text}[/color]"
                             # Map requirements not met
                             else:
-                                text = f"[color=a9a9a9]{text}[/color]"
-                                tooltip = f"Requires: "
-                                if mission_data.required_world:
-                                    tooltip += ", ".join(list(self.ctx.mission_req_table[parse_unlock(req_mission).campaign])[parse_unlock(req_mission).connect_to - 1] for
-                                                            req_mission in
-                                                            mission_data.required_world)
+                                if False:
+                                    text = f"[color=a9a9a9]{text}[/color]"
+                                    tooltip = f"Requires: "
+                                    if mission_data.required_world:
+                                        tooltip += ", ".join(list(self.ctx.mission_req_table[parse_unlock(req_mission).campaign])[parse_unlock(req_mission).connect_to - 1] for
+                                                                req_mission in
+                                                                mission_data.required_world)
 
+                                        if mission_data.number:
+                                            tooltip += " and "
                                     if mission_data.number:
-                                        tooltip += " and "
-                                if mission_data.number:
-                                    tooltip += f"{self.ctx.mission_req_table[campaign][mission].number} missions completed"
+                                        tooltip += f"{self.ctx.mission_req_table[campaign][mission].number} missions completed"
+                                else:
+                                    text = ""
 
                             if mission_id == self.ctx.final_mission:
                                 if mission in available_missions:
                                     text = f"[color=FFBC95]{mission}[/color]"
                                 else:
-                                    text = f"[color=D0C0BE]{mission}[/color]"
+                                    if False:
+                                        text = f"[color=D0C0BE]{mission}[/color]"
+                                    else:
+                                        text = f"[color=D0C0BE]Final Mission[/color]"
                                 if tooltip:
                                     tooltip += "\n"
                                 tooltip += "Final Mission"
 
-                            if remaining_count > 0:
+                            if remaining_count > 0 and (mission in available_missions or False):
                                 if tooltip:
                                     tooltip += "\n\n"
                                 tooltip += f"-- Uncollected locations --"
@@ -230,7 +236,7 @@ class SC2Manager(GameManager):
                                 SC2Race.ZERG: (1, 0.65, 0.37),
                                 SC2Race.PROTOSS: (0.55, 0.7, 1)
                             }
-                            if race in racial_colors:
+                            if race in racial_colors and (mission in available_missions or False):
                                 mission_button.background_color = racial_colors[race]
                             mission_button.tooltip_text = tooltip
                             mission_button.bind(on_press=self.mission_callback)
