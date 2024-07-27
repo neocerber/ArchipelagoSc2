@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Optional, Callable, NamedTuple, Union, TYPE_CHECKING
 import math
 
-from BaseClasses import Region, Entrance, Location, CollectionState
+from BaseClasses import Region, Entrance, Location, CollectionState, LocationProgressType
 from .locations import LocationData
 from .options import get_option_value, MissionOrder, get_enabled_campaigns, campaign_depending_orders, \
     GridTwoStartPositions, static_mission_orders, dynamic_mission_orders
@@ -49,6 +49,13 @@ def create_vanilla_regions(
 
     mission_pools: Dict[MissionPools, List[SC2Mission]] = filter_missions(world)
     final_mission = mission_pools[MissionPools.FINAL][0]
+    # qwe  
+    # if get_option_value(world, "no_progress_in_final"):
+    if True:
+        final_missions_locations = [] 
+        for location in locations_per_region[final_mission.mission_name]:
+            final_missions_locations.append(location._replace(progress_type=LocationProgressType.EXCLUDED))
+        locations_per_region[final_mission.mission_name] = final_missions_locations
 
     enabled_campaigns = get_enabled_campaigns(world)
     names: Dict[str, int] = {}
@@ -645,6 +652,7 @@ def setup_final_location(final_location, location_cache):
 def create_location(player: int, location_data: LocationData, region: Region,
                     location_cache: List[Location]) -> Location:
     location = Location(player, location_data.name, location_data.code, region)
+    location.progress_type = location_data.progress_type
     location.access_rule = location_data.rule
 
     location_cache.append(location)

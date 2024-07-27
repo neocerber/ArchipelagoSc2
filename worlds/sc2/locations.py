@@ -7,7 +7,7 @@ from .options import (get_option_value, RequiredTactics,
 from .rules import SC2Logic
 from .mission_tables import SC2Mission
 
-from BaseClasses import Location
+from BaseClasses import Location, LocationProgressType
 from worlds.AutoWorld import World
 
 if TYPE_CHECKING:
@@ -40,6 +40,7 @@ class LocationData(NamedTuple):
     code: int
     type: LocationType
     rule: Callable[['CollectionState'], bool] = Location.access_rule
+    progress_type: LocationProgressType = LocationProgressType.DEFAULT
 
 
 def make_location_data(
@@ -47,9 +48,10 @@ def make_location_data(
     name: str,
     code: int,
     type: LocationType,
-    rule: Callable[['CollectionState'], bool] = Location.access_rule
+    rule: Callable[['CollectionState'], bool] = Location.access_rule,
+    progress_type: LocationProgressType = LocationProgressType.DEFAULT
 ) -> LocationData:
-    return LocationData(region, f'{region}: {name}', code, type, rule)
+    return LocationData(region, f'{region}: {name}', code, type, rule, progress_type)
 
 
 def get_location_types(world: 'SC2World', inclusion_type: int) -> Set[LocationType]:
